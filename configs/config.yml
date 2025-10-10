@@ -1,6 +1,15 @@
+port: "3003"
+
 db:
   host: "127.0.0.1"
-  port: "5436"
-  username: "postgres"
+  port: "5432"
+  username: "gznrf"
+  password: "postgres"
   dbname: "tracker_db"
-  sslmode:
+  sslmode: "disable"
+
+password:
+  hash_salt: "funny#!monkey12"
+
+token:
+  key: "qweds1fkp231safka"

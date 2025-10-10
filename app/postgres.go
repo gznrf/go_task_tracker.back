@@ -1,4 +1,4 @@
-package repo
+package app
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	userTable = "user_info"
+	UserTable = "user_info"
 )
 
 type Config struct {
