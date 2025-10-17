@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gznrf/go_task_tracker.back.git/app"
-	m_auth "github.com/gznrf/go_task_tracker.back.git/models/auth"
+	"github.com/gznrf/go_task_tracker.back.git/models/auth"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -16,11 +16,11 @@ func NewAuthRepo(db *sqlx.DB) *AuthRepo {
 	return &AuthRepo{db: db}
 }
 
-func (as *AuthRepo) CreateUser(username string, hashedPassword string) (int64, error) {
+func (r *AuthRepo) CreateUser(username string, hashedPassword string) (int64, error) {
 	var createdId int64
 	query := fmt.Sprintf("INSERT INTO %s (name, password_hash) VALUES ($1, $2) RETURNING id", app.UserTable)
 
-	row := as.db.QueryRow(query, username, hashedPassword)
+	row := r.db.QueryRow(query, username, hashedPassword)
 	if err := row.Scan(&createdId); err != nil {
 		return 0, err
 	}
@@ -28,10 +28,14 @@ func (as *AuthRepo) CreateUser(username string, hashedPassword string) (int64, e
 	return createdId, nil
 }
 
-func (as *AuthRepo) GetUser(username, hashedPassword string) (*m_auth.User, error) {
-	var outputUser *m_auth.User
-	query := fmt.Sprintf("SELECT * FROM %s WHERE username = $1 AND password_hash = $2", app.UserTable)
-	err := as.db.Get(&outputUser, query, username, hashedPassword)
-
+func (r *AuthRepo) GetUser(username, hashedPassword string) (m_auth.User, error) {
+	var outputPass m_auth.ChangePasswordResponse
+	var outputUser m_auth.User
+	query := fmt.Sprintf("SELECT * FROM %s WHERE name = $1 AND password_hash = $2", app.UserTable)
+	err := r.db.Get(&outputPass, query, username, hashedPassword)
+	outputUser = m_auth.User{
+		Username: username,
+		Password: outputPass.PasswordHash,
+	}
 	return outputUser, err
 }
