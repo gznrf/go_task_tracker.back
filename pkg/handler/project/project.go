@@ -20,16 +20,24 @@ func NewHProject(service *service.Service) *HProject {
 
 func (h *HProject) Create(w http.ResponseWriter, r *http.Request) {
 	var input m_project.Project
+
+	userId, err := utils.GetUserIdFromCtx(r)
+	if err != nil {
+		utils.WriteError(w, 500, err)
+		return
+	}
+
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
-	if input.Name == "" || input.OwnerId == 0 {
+	if input.Name == "" {
 		utils.WriteError(w, 400, errors.New("name and owner_id is required"))
 		return
 	}
 	//TODO service.Create --> created_id
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
+		"user_id": userId,
 		//TODO created_id
 	}); nil != err {
 		utils.WriteError(w, 500, err)

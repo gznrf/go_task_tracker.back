@@ -17,14 +17,14 @@ func NewUserRepo(db *sqlx.DB) *UserRepo {
 }
 
 func (r *UserRepo) Get() ([]m_user.User, error) {
-	var outputUser []m_user.User
-	query := fmt.Sprintf("SELECT * FROM %s", app.UserTable)
-	err := r.db.Select(&outputUser, query)
+	var outputUsers []m_user.User
+	query := fmt.Sprintf(`SELECT * FROM %s`, app.UserTable)
+	err := r.db.Select(&outputUsers, query)
 	if err != nil {
 		return nil, err
 	}
 
-	return outputUser, nil
+	return outputUsers, nil
 }
 func (r *UserRepo) GetById(userID int64) (m_user.User, error) {
 	var outputUser m_user.User

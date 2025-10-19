@@ -1,8 +1,8 @@
 package m_project
 
 type Project struct {
-	Id          int    `json:"id" db:"id"`
+	Id          int64  `json:"id" db:"id"`
 	Name        string `json:"name" db:"name"`
 	Description string `json:"description" db:"description"`
-	OwnerId     int    `json:"owner_id" db:"owner_id"`
+	OwnerId     int64  `json:"owner_id" db:"owner_id"`
 }

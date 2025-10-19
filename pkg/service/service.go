@@ -1,9 +1,11 @@
 package service
 
 import (
+	m_project "github.com/gznrf/go_task_tracker.back.git/models/project"
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/auth"
+	s_project "github.com/gznrf/go_task_tracker.back.git/pkg/service/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/user"
 )
 
@@ -21,14 +23,26 @@ type User interface {
 	Delete(userId int64) error
 }
 
+type Project interface {
+	Create(creatorId int64, creatingProject *m_project.Project) (int64, error)
+	Get() ([]m_project.Project, error)
+	GetByUserId(userId int64) ([]m_project.Project, error)
+	GetById(projectId int64) (m_project.Project, error)
+	Update(creatorId int64, updatingProject *m_project.Project) error
+	Delete(creatorId int64, projectId int64) error
+	CheckIsOwner(creatorId int64, projectId int64) (bool, error)
+}
+
 type Service struct {
-	AuthService Auth
-	UserService User
+	AuthService    Auth
+	UserService    User
+	ProjectService Project
 }
 
 func NewService(repo *repo.Repo) *Service {
 	return &Service{
-		AuthService: s_auth.NewAuthService(repo),
-		UserService: s_user.NewUserService(repo),
+		AuthService:    s_auth.NewAuthService(repo),
+		UserService:    s_user.NewUserService(repo),
+		ProjectService: s_project.NewProjectService(repo),
 	}
 }
