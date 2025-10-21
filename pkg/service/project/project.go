@@ -1,6 +1,8 @@
 package s_project
 
 import (
+	"errors"
+
 	"github.com/gznrf/go_task_tracker.back.git/models/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo"
 )
@@ -49,9 +51,10 @@ func (s *ProjectService) Update(creatorId int64, updatingProject *m_project.Proj
 		if err != nil {
 			return err
 		}
+		return nil
 	}
 
-	return nil
+	return errors.New("user isn't owner of this project")
 }
 func (s *ProjectService) Delete(creatorId int64, projectId int64) error {
 	isOwner, err := s.CheckIsOwner(creatorId, projectId)
@@ -64,9 +67,10 @@ func (s *ProjectService) Delete(creatorId int64, projectId int64) error {
 		if err != nil {
 			return err
 		}
+		return nil
 	}
 
-	return nil
+	return errors.New("user isn't owner of this project")
 }
 
 func (s *ProjectService) CheckIsOwner(creatorId int64, projectId int64) (bool, error) {

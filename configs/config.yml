@@ -4,8 +4,8 @@ db:
   host: "127.0.0.1"
   port: "5432"
   username: "gznrf"
-  password: "postgres"
-  dbname: "tracker_db"
+  password: ""
+  dbname: "gtt_db"
   sslmode: "disable"
 
 password:

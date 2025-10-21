@@ -6,8 +6,10 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/auth"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/board"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/column"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/middleware"
-	h_project "github.com/gznrf/go_task_tracker.back.git/pkg/handler/project"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service"
 )
@@ -17,6 +19,8 @@ type Handler struct {
 	middleWareHandler *h_middleware.HMiddleWare
 	userHandler       *h_user.HUser
 	projectHandler    *h_project.HProject
+	boardHandler      *h_board.HBoard
+	columnHandler     *h_column.HColumn
 	service           service.Service
 }
 
@@ -26,6 +30,8 @@ func NewHandler(services *service.Service) *Handler {
 		middleWareHandler: h_middleware.NewMiddleWare(),
 		userHandler:       h_user.NewHUser(services),
 		projectHandler:    h_project.NewHProject(services),
+		boardHandler:      h_board.NewHBoard(services),
+		columnHandler:     h_column.NewHColumn(services),
 		service:           *services,
 	}
 }
@@ -58,6 +64,16 @@ func (h *Handler) InitRoutes() *http.Handler {
 			project.HandleFunc("/getById", h.projectHandler.GetById).Methods("GET")
 			project.HandleFunc("/update", h.projectHandler.Update).Methods("PATCH")
 			project.HandleFunc("/delete", h.projectHandler.Delete).Methods("DELETE")
+
+			board := project.PathPrefix("/board").Subrouter()
+			{
+				board.HandleFunc("/create", h.boardHandler.Create).Methods("POST")
+				board.HandleFunc("/get", h.boardHandler.Get).Methods("GET")
+				board.HandleFunc("/getByProjectId", h.boardHandler.GetByProjectId).Methods("GET")
+				board.HandleFunc("/getById", h.boardHandler.GetById).Methods("GET")
+				board.HandleFunc("/update", h.boardHandler.Update).Methods("PATCH")
+				board.HandleFunc("/delete", h.boardHandler.Delete).Methods("DELETE")
+			}
 		}
 	}
 

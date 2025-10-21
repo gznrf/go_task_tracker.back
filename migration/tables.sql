@@ -8,9 +8,9 @@ CREATE TABLE user_info
 CREATE TABLE project
 (
     id serial not null unique,
-    Name text not null,
-    Description text,
-    Owner_id bigint not null
+    name text not null,
+    description text,
+    owner_id bigint not null
 );
 
 CREATE TABLE projects_users
@@ -19,3 +19,10 @@ CREATE TABLE projects_users
     from_id bigint not null,
     to_id   bigint not null
 );
+
+CREATE TABLE board(
+    id serial not null unique,
+    name text not null,
+    project_id bigint not null
+);
+

@@ -2,9 +2,11 @@ package repo
 
 import (
 	"github.com/gznrf/go_task_tracker.back.git/models/auth"
+	m_board "github.com/gznrf/go_task_tracker.back.git/models/board"
 	m_project "github.com/gznrf/go_task_tracker.back.git/models/project"
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/auth"
+	r_board "github.com/gznrf/go_task_tracker.back.git/pkg/repo/board"
 	r_projects "github.com/gznrf/go_task_tracker.back.git/pkg/repo/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/user"
 	"github.com/jmoiron/sqlx"
@@ -32,11 +34,21 @@ type Project interface {
 	CheckIsOwner(creatorId int64, projectId int64) (bool, error)
 }
 
+type Board interface {
+	Create(creatingBoard *m_board.Board) (int64, error)
+	Get() ([]m_board.Board, error)
+	GetById(boardId int64) (m_board.Board, error)
+	GetByProjectId(projectId int64) ([]m_board.Board, error)
+	Update(updatingBoard *m_board.Board) error
+	Delete(boardId int64) error
+}
+
 type Repo struct {
 	db          *sqlx.DB
 	AuthRepo    Auth
 	UserRepo    User
 	ProjectRepo Project
+	BoardRepo   Board
 }
 
 func NewRepository(db *sqlx.DB) *Repo {
@@ -45,5 +57,6 @@ func NewRepository(db *sqlx.DB) *Repo {
 		AuthRepo:    r_auth.NewAuthRepo(db),
 		UserRepo:    r_user.NewUserRepo(db),
 		ProjectRepo: r_projects.NewProjectRepo(db),
+		BoardRepo:   r_board.NewBoardRepo(db),
 	}
 }

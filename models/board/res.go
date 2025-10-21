@@ -1,6 +1,10 @@
-package m_project
+package m_board
 
 type GetByIdResponse struct {
+	Id int64 `json:"id"`
+}
+
+type GetByProjectIdResponse struct {
 	Id int64 `json:"id"`
 }
 

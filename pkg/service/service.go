@@ -1,11 +1,13 @@
 package service
 
 import (
-	m_project "github.com/gznrf/go_task_tracker.back.git/models/project"
+	m_board "github.com/gznrf/go_task_tracker.back.git/models/board"
+	"github.com/gznrf/go_task_tracker.back.git/models/project"
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/auth"
-	s_project "github.com/gznrf/go_task_tracker.back.git/pkg/service/project"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/service/board"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/service/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/user"
 )
 
@@ -33,10 +35,20 @@ type Project interface {
 	CheckIsOwner(creatorId int64, projectId int64) (bool, error)
 }
 
+type Board interface {
+	Create(creatingBoard *m_board.Board) (int64, error)
+	Get() ([]m_board.Board, error)
+	GetById(boardId int64) (m_board.Board, error)
+	GetByProjectId(projectId int64) ([]m_board.Board, error)
+	Update(updatingBoard *m_board.Board) error
+	Delete(boardId int64) error
+}
+
 type Service struct {
 	AuthService    Auth
 	UserService    User
 	ProjectService Project
+	BoardService   Board
 }
 
 func NewService(repo *repo.Repo) *Service {
@@ -44,5 +56,6 @@ func NewService(repo *repo.Repo) *Service {
 		AuthService:    s_auth.NewAuthService(repo),
 		UserService:    s_user.NewUserService(repo),
 		ProjectService: s_project.NewProjectService(repo),
+		BoardService:   s_board.NewBoardService(repo),
 	}
 }

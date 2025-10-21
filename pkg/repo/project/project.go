@@ -25,7 +25,7 @@ func (r *ProjectRepo) Create(creatorId int64, creatingProject *m_project.Project
 	if err := row.Scan(&createdId); err != nil {
 		return 0, err
 	}
-	err := r_utils.CreateConnection(r.db, app.ProjectsUsers, createdId, creatorId)
+	_, err := r_utils.CreateConnection(r.db, app.ProjectsUsersTable, createdId, creatorId)
 	if err != nil {
 		return 0, err
 	}
@@ -45,8 +45,14 @@ func (r *ProjectRepo) Get() ([]m_project.Project, error) {
 func (r *ProjectRepo) GetByUserId(userId int64) ([]m_project.Project, error) {
 	var outputProjects []m_project.Project
 
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE owner_id = $1`, app.ProjectTable)
-	err := r.db.Get(&outputProjects, query, userId)
+	query := fmt.Sprintf(`select %[1]s.id, %[1]s.name, %[1]s.owner_id, %[1]s.description
+		from %[1]s
+		left join %[2]s On %[1]s.id = %[2]s.from_id
+		left join %[3]s on %[2]s.to_id = %[3]s.id WHERE %[3]s.id = $1;`,
+		app.ProjectTable,
+		app.ProjectsUsersTable,
+		app.UserTable)
+	err := r.db.Select(&outputProjects, query, userId)
 	if err != nil {
 		return []m_project.Project{}, err
 	}
@@ -64,7 +70,7 @@ func (r *ProjectRepo) GetById(projectId int64) (m_project.Project, error) {
 	return outputProject, nil
 }
 func (r *ProjectRepo) Update(updatingProject *m_project.Project) error {
-	query := fmt.Sprintf(`UPDATE %s SET name = $1, descriprion = $2 WHERE id = $3`, app.ProjectTable)
+	query := fmt.Sprintf(`UPDATE %s SET name = $1, description = $2 WHERE id = $3`, app.ProjectTable)
 	_, err := r.db.Exec(query, updatingProject.Name, updatingProject.Description, updatingProject.Id)
 
 	return err
@@ -76,7 +82,7 @@ func (r *ProjectRepo) Delete(projectId int64) error {
 		return err
 	}
 
-	err = r_utils.RemoveConnection(r.db, app.ProjectsUsers, projectId, "from_id")
+	err = r_utils.RemoveConnection(r.db, app.ProjectsUsersTable, projectId, "from_id")
 	if err != nil {
 		return err
 	}
