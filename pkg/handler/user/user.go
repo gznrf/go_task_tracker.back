@@ -9,15 +9,15 @@ import (
 	"github.com/gznrf/go_task_tracker.back.git/utils"
 )
 
-type HUser struct {
+type UserHandler struct {
 	service *service.Service
 }
 
-func NewHUser(service *service.Service) *HUser {
-	return &HUser{service: service}
+func NewUserHandler(service *service.Service) *UserHandler {
+	return &UserHandler{service: service}
 }
 
-func (h *HUser) Get(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) Get(w http.ResponseWriter, r *http.Request) {
 	outputUsers, err := h.service.UserService.Get()
 	if err != nil {
 		utils.WriteError(w, 500, err)
@@ -32,7 +32,7 @@ func (h *HUser) Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HUser) GetById(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	userId, err := utils.GetUserIdFromCtx(r)
 	if err != nil {
 		utils.WriteError(w, 500, err)
@@ -55,7 +55,7 @@ func (h *HUser) GetById(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HUser) Update(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var input m_user.UpdateUserRequest
 	userId, err := utils.GetUserIdFromCtx(r)
 	if err != nil {
@@ -73,9 +73,15 @@ func (h *HUser) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := utils.WriteJson(w, 200, map[string]interface{}{
+		"updated_id": input.UserId,
+	}); err != nil {
+		utils.WriteError(w, 500, err)
+		return
+	}
 }
 
-func (h *HUser) Delete(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	userId, err := utils.GetUserIdFromCtx(r)
 	if err != nil {
 		utils.WriteError(w, 500, err)

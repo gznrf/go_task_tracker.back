@@ -14,14 +14,14 @@ const (
 	userCtx             = "userId"
 )
 
-type HMiddleWare struct {
+type MiddleWareHandler struct {
 }
 
-func NewMiddleWare() *HMiddleWare {
-	return &HMiddleWare{}
+func NewMiddleWareHandler() *MiddleWareHandler {
+	return &MiddleWareHandler{}
 }
 
-func (h *HMiddleWare) UserIdentity(next http.Handler) http.Handler {
+func (h *MiddleWareHandler) UserIdentity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get(authorizationHeader)
 		if header == "" {

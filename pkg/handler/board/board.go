@@ -10,15 +10,15 @@ import (
 	"github.com/gznrf/go_task_tracker.back.git/utils"
 )
 
-type HBoard struct {
+type BoardHandler struct {
 	service *service.Service
 }
 
-func NewHBoard(service *service.Service) *HBoard {
-	return &HBoard{service: service}
+func NewBoardHandler(service *service.Service) *BoardHandler {
+	return &BoardHandler{service: service}
 }
 
-func (h *HBoard) Create(w http.ResponseWriter, r *http.Request) {
+func (h *BoardHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var input m_board.Board
 
 	userId, err := utils.GetUserIdFromCtx(r)
@@ -50,7 +50,7 @@ func (h *HBoard) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-func (h *HBoard) Get(w http.ResponseWriter, r *http.Request) {
+func (h *BoardHandler) Get(w http.ResponseWriter, r *http.Request) {
 	boardsList, err := h.service.BoardService.Get()
 	if err != nil {
 		utils.WriteError(w, 500, err)
@@ -71,7 +71,7 @@ func (h *HBoard) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-func (h *HBoard) GetById(w http.ResponseWriter, r *http.Request) {
+func (h *BoardHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	var input m_board.GetByIdResponse
 
 	userId, err := utils.GetUserIdFromCtx(r)
@@ -102,7 +102,7 @@ func (h *HBoard) GetById(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HBoard) GetByProjectId(w http.ResponseWriter, r *http.Request) {
+func (h *BoardHandler) GetByProjectId(w http.ResponseWriter, r *http.Request) {
 	var input m_board.GetByProjectIdResponse
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -127,7 +127,7 @@ func (h *HBoard) GetByProjectId(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (h *HBoard) Update(w http.ResponseWriter, r *http.Request) {
+func (h *BoardHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var input m_board.Board
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -151,7 +151,7 @@ func (h *HBoard) Update(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HBoard) Delete(w http.ResponseWriter, r *http.Request) {
+func (h *BoardHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	var input m_board.DeleteResponse
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {

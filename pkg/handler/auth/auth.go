@@ -10,15 +10,15 @@ import (
 	"github.com/gznrf/go_task_tracker.back.git/utils"
 )
 
-type HAuth struct {
+type AuthHandler struct {
 	service *service.Service
 }
 
-func NewHAuth(service *service.Service) *HAuth {
-	return &HAuth{service: service}
+func NewAuthHandler(service *service.Service) *AuthHandler {
+	return &AuthHandler{service: service}
 }
 
-func (h *HAuth) SignUp(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	var input m_auth.RegisterRequest
 
 	w.Header().Add("Content-Type", "application/json")
@@ -55,7 +55,7 @@ func (h *HAuth) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HAuth) SignIn(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 	var input m_auth.LoginRequest
 
 	w.Header().Add("Content-Type", "application/json")

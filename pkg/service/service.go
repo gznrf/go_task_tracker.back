@@ -1,12 +1,14 @@
 package service
 
 import (
-	m_board "github.com/gznrf/go_task_tracker.back.git/models/board"
+	"github.com/gznrf/go_task_tracker.back.git/models/board"
+	"github.com/gznrf/go_task_tracker.back.git/models/column"
 	"github.com/gznrf/go_task_tracker.back.git/models/project"
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/auth"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/board"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/service/column"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/user"
 )
@@ -42,6 +44,15 @@ type Board interface {
 	GetByProjectId(projectId int64) ([]m_board.Board, error)
 	Update(updatingBoard *m_board.Board) error
 	Delete(boardId int64) error
+} //короче тут три эмплементации
+
+type Column interface {
+	Create(creatingColumn *m_column.CreateRequest) (int64, error)
+	Get() ([]m_column.Column, error)
+	GetByBoardId(boardId int64) ([]m_column.Column, error)
+	GetById(columnId int64) (m_column.Column, error)
+	Update(request *m_column.UpdateRequest) error
+	Delete(columnId int64) error
 }
 
 type Service struct {
@@ -49,6 +60,7 @@ type Service struct {
 	UserService    User
 	ProjectService Project
 	BoardService   Board
+	ColumnService  Column
 }
 
 func NewService(repo *repo.Repo) *Service {
@@ -57,5 +69,6 @@ func NewService(repo *repo.Repo) *Service {
 		UserService:    s_user.NewUserService(repo),
 		ProjectService: s_project.NewProjectService(repo),
 		BoardService:   s_board.NewBoardService(repo),
+		ColumnService:  s_column.NewColumnService(repo),
 	}
 }

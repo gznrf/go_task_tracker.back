@@ -15,24 +15,22 @@ import (
 )
 
 type Handler struct {
-	authHandler       *h_auth.HAuth
-	middleWareHandler *h_middleware.HMiddleWare
-	userHandler       *h_user.HUser
-	projectHandler    *h_project.HProject
-	boardHandler      *h_board.HBoard
-	columnHandler     *h_column.HColumn
-	service           service.Service
+	authHandler       *h_auth.AuthHandler
+	middleWareHandler *h_middleware.MiddleWareHandler
+	userHandler       *h_user.UserHandler
+	projectHandler    *h_project.ProjectHandler
+	boardHandler      *h_board.BoardHandler
+	columnHandler     *h_column.ColumnHandler
 }
 
 func NewHandler(services *service.Service) *Handler {
 	return &Handler{
-		authHandler:       h_auth.NewHAuth(services),
-		middleWareHandler: h_middleware.NewMiddleWare(),
-		userHandler:       h_user.NewHUser(services),
-		projectHandler:    h_project.NewHProject(services),
-		boardHandler:      h_board.NewHBoard(services),
-		columnHandler:     h_column.NewHColumn(services),
-		service:           *services,
+		authHandler:       h_auth.NewAuthHandler(services),
+		middleWareHandler: h_middleware.NewMiddleWareHandler(),
+		userHandler:       h_user.NewUserHandler(services),
+		projectHandler:    h_project.NewProjectHandler(services),
+		boardHandler:      h_board.NewBoardHandler(services),
+		columnHandler:     h_column.NewColumnHandler(services),
 	}
 }
 
@@ -73,6 +71,27 @@ func (h *Handler) InitRoutes() *http.Handler {
 				board.HandleFunc("/getById", h.boardHandler.GetById).Methods("GET")
 				board.HandleFunc("/update", h.boardHandler.Update).Methods("PATCH")
 				board.HandleFunc("/delete", h.boardHandler.Delete).Methods("DELETE")
+
+				column := board.PathPrefix("/column").Subrouter()
+				{
+					column.HandleFunc("/create", nil).Methods("POST")
+					column.HandleFunc("/get", nil).Methods("GET")
+					column.HandleFunc("/getByBoardId", nil).Methods("GET")
+					column.HandleFunc("/getById", nil).Methods("GET")
+					column.HandleFunc("/update", nil).Methods("PATCH")
+					column.HandleFunc("/delete", nil).Methods("DELETE")
+
+					task := column.PathPrefix("/task").Subrouter()
+					{
+						task.HandleFunc("/create", nil).Methods("POST")
+						task.HandleFunc("/get", nil).Methods("GET")
+						task.HandleFunc("/getByColumnId", nil).Methods("GET")
+						task.HandleFunc("/getById", nil).Methods("GET")
+						task.HandleFunc("/update", nil).Methods("PATCH")
+						task.HandleFunc("/delete", nil).Methods("DELETE")
+					}
+
+				}
 			}
 		}
 	}

@@ -2,12 +2,14 @@ package repo
 
 import (
 	"github.com/gznrf/go_task_tracker.back.git/models/auth"
-	m_board "github.com/gznrf/go_task_tracker.back.git/models/board"
-	m_project "github.com/gznrf/go_task_tracker.back.git/models/project"
+	"github.com/gznrf/go_task_tracker.back.git/models/board"
+	"github.com/gznrf/go_task_tracker.back.git/models/column"
+	"github.com/gznrf/go_task_tracker.back.git/models/project"
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/auth"
-	r_board "github.com/gznrf/go_task_tracker.back.git/pkg/repo/board"
-	r_projects "github.com/gznrf/go_task_tracker.back.git/pkg/repo/project"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/board"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/column"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/user"
 	"github.com/jmoiron/sqlx"
 )
@@ -43,20 +45,29 @@ type Board interface {
 	Delete(boardId int64) error
 }
 
+type Column interface {
+	Create(creatingColumn *m_column.CreateRequest) (int64, error)
+	Get() ([]m_column.Column, error)
+	GetByBoardId(boardId int64) ([]m_column.Column, error)
+	GetById(columnId int64) (m_column.GetByIdResponse, error)
+	Update(request *m_column.UpdateRequest) error
+	Delete(columnId int64) error
+}
+
 type Repo struct {
-	db          *sqlx.DB
 	AuthRepo    Auth
 	UserRepo    User
 	ProjectRepo Project
 	BoardRepo   Board
+	ColumnRepo  Column
 }
 
 func NewRepository(db *sqlx.DB) *Repo {
 	return &Repo{
-		db:          db,
 		AuthRepo:    r_auth.NewAuthRepo(db),
 		UserRepo:    r_user.NewUserRepo(db),
 		ProjectRepo: r_projects.NewProjectRepo(db),
 		BoardRepo:   r_board.NewBoardRepo(db),
+		ColumnRepo:  r_column.NewColumnRepo(db),
 	}
 }

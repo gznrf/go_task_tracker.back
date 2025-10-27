@@ -10,15 +10,15 @@ import (
 	"github.com/gznrf/go_task_tracker.back.git/utils"
 )
 
-type HProject struct {
+type ProjectHandler struct {
 	service *service.Service
 }
 
-func NewHProject(service *service.Service) *HProject {
-	return &HProject{service: service}
+func NewProjectHandler(service *service.Service) *ProjectHandler {
+	return &ProjectHandler{service: service}
 }
 
-func (h *HProject) Create(w http.ResponseWriter, r *http.Request) {
+func (h *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var input m_project.Project
 
 	userId, err := utils.GetUserIdFromCtx(r)
@@ -51,7 +51,7 @@ func (h *HProject) Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *HProject) Get(w http.ResponseWriter, r *http.Request) {
+func (h *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
 	projectsList, err := h.service.ProjectService.Get()
 	if err != nil {
 		utils.WriteError(w, 500, err)
@@ -72,7 +72,7 @@ func (h *HProject) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-func (h *HProject) GetById(w http.ResponseWriter, r *http.Request) {
+func (h *ProjectHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	var input m_project.GetByIdResponse
 
 	userId, err := utils.GetUserIdFromCtx(r)
@@ -104,7 +104,7 @@ func (h *HProject) GetById(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetByUserId id gets from token
-func (h *HProject) GetByUserId(w http.ResponseWriter, r *http.Request) {
+func (h *ProjectHandler) GetByUserId(w http.ResponseWriter, r *http.Request) {
 	userId, err := utils.GetUserIdFromCtx(r)
 	if err != nil {
 		utils.WriteError(w, 500, err)
@@ -123,7 +123,7 @@ func (h *HProject) GetByUserId(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-func (h *HProject) Update(w http.ResponseWriter, r *http.Request) {
+func (h *ProjectHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var input m_project.Project
 
 	userId, err := utils.GetUserIdFromCtx(r)
@@ -153,7 +153,7 @@ func (h *HProject) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-func (h *HProject) Delete(w http.ResponseWriter, r *http.Request) {
+func (h *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	var input m_project.DeleteResponse
 
 	userId, err := utils.GetUserIdFromCtx(r)
