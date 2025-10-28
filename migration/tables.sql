@@ -26,3 +26,10 @@ CREATE TABLE board(
     project_id bigint not null
 );
 
+CREATE TABLE column_info
+(
+    id          serial not null unique,
+    name        text   not null,
+    board_id    bigint not null
+);
+

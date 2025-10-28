@@ -50,9 +50,9 @@ type Column interface {
 	Create(creatingColumn *m_column.CreateRequest) (int64, error)
 	Get() ([]m_column.Column, error)
 	GetByBoardId(boardId int64) ([]m_column.Column, error)
-	GetById(columnId int64) (m_column.Column, error)
-	Update(request *m_column.UpdateRequest) error
-	Delete(columnId int64) error
+	GetById(columnId int64) (m_column.GetByIdResponse, error)
+	Update(updatingColumn *m_column.UpdateRequest) error
+	Delete(deletingColumn *m_column.DeleteRequest) error
 }
 
 type Service struct {

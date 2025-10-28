@@ -50,8 +50,8 @@ type Column interface {
 	Get() ([]m_column.Column, error)
 	GetByBoardId(boardId int64) ([]m_column.Column, error)
 	GetById(columnId int64) (m_column.GetByIdResponse, error)
-	Update(request *m_column.UpdateRequest) error
-	Delete(columnId int64) error
+	Update(updatingColumn *m_column.UpdateRequest) error
+	Delete(deletingColumn *m_column.DeleteRequest) error
 }
 
 type Repo struct {

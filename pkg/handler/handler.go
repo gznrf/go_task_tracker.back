@@ -74,12 +74,12 @@ func (h *Handler) InitRoutes() *http.Handler {
 
 				column := board.PathPrefix("/column").Subrouter()
 				{
-					column.HandleFunc("/create", nil).Methods("POST")
-					column.HandleFunc("/get", nil).Methods("GET")
-					column.HandleFunc("/getByBoardId", nil).Methods("GET")
-					column.HandleFunc("/getById", nil).Methods("GET")
-					column.HandleFunc("/update", nil).Methods("PATCH")
-					column.HandleFunc("/delete", nil).Methods("DELETE")
+					column.HandleFunc("/create", h.columnHandler.Create).Methods("POST")
+					column.HandleFunc("/get", h.columnHandler.Get).Methods("GET")
+					column.HandleFunc("/getByBoardId", h.columnHandler.GetByBoardId).Methods("GET")
+					column.HandleFunc("/getById", h.columnHandler.GetById).Methods("GET")
+					column.HandleFunc("/update", h.columnHandler.Update).Methods("PATCH")
+					column.HandleFunc("/delete", h.columnHandler.Delete).Methods("DELETE")
 
 					task := column.PathPrefix("/task").Subrouter()
 					{

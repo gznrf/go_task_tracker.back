@@ -151,7 +151,7 @@ func (h *ColumnHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
 		"user_id":    userId,
-		"updated_id": input.ColumnId,
+		"updated_id": input.Id,
 	}); err != nil {
 		utils.WriteError(w, 500, err)
 		return
@@ -172,7 +172,7 @@ func (h *ColumnHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.ColumnService.Delete(input.ColumnId)
+	err = h.service.ColumnService.Delete(&input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return

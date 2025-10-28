@@ -11,6 +11,7 @@ const (
 	ProjectTable       = "project"
 	ProjectsUsersTable = "projects_users"
 	BoardTable         = "board"
+	ColumnTable        = "column_info"
 )
 
 type Config struct {

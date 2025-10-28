@@ -54,7 +54,7 @@ func (r *ProjectRepo) GetByUserId(userId int64) ([]m_project.Project, error) {
 		app.UserTable)
 	err := r.db.Select(&outputProjects, query, userId)
 	if err != nil {
-		return []m_project.Project{}, err
+		return nil, err
 	}
 
 	return outputProjects, nil
