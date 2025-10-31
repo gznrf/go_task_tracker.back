@@ -10,6 +10,7 @@ import (
 	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/column"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/middleware"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/project"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/task"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/handler/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service"
 )
@@ -21,6 +22,7 @@ type Handler struct {
 	projectHandler    *h_project.ProjectHandler
 	boardHandler      *h_board.BoardHandler
 	columnHandler     *h_column.ColumnHandler
+	taskhandler       *h_task.TaskHandler
 }
 
 func NewHandler(services *service.Service) *Handler {
@@ -31,6 +33,7 @@ func NewHandler(services *service.Service) *Handler {
 		projectHandler:    h_project.NewProjectHandler(services),
 		boardHandler:      h_board.NewBoardHandler(services),
 		columnHandler:     h_column.NewColumnHandler(services),
+		taskhandler:       h_task.NewTaskHandler(services),
 	}
 }
 

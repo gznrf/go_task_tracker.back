@@ -7,10 +7,6 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type statusResponse struct {
-	Status string `json:"status"`
-}
-
 func WriteJson(w http.ResponseWriter, status int, v any) error {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
