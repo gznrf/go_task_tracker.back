@@ -13,49 +13,63 @@ func NewColumnService(repo *repo.Repo) *ColumnService {
 	return &ColumnService{repo: repo}
 }
 
-func (s *ColumnService) Create(creatingColumn *m_column.CreateRequest) (int64, error) {
-	createdId, err := s.repo.ColumnRepo.Create(creatingColumn)
-	if err != nil {
-		return 0, err
-	}
-	return createdId, nil
-}
-func (s *ColumnService) Get() ([]m_column.Column, error) {
-	columnsList, err := s.repo.ColumnRepo.Get()
-	if err != nil {
-		return nil, err
-	}
-	return columnsList, nil
-}
-func (s *ColumnService) GetById(columnId int64) (m_column.GetByIdResponse, error) {
-	outputColumn, err := s.repo.ColumnRepo.GetById(columnId)
-	if err != nil {
-		return m_column.GetByIdResponse{}, err
-	}
+func (s *ColumnService) Create(data *m_column.CreateRequest) (*m_column.CreateResponse, error) {
+	var output *m_column.CreateResponse
 
-	return outputColumn, nil
-}
-func (s *ColumnService) GetByBoardId(boardId int64) ([]m_column.Column, error) {
-	columnsList, err := s.repo.ColumnRepo.GetByBoardId(boardId)
+	output, err := s.repo.ColumnRepo.Create(data)
 	if err != nil {
 		return nil, err
 	}
 
-	return columnsList, nil
+	return output, nil
 }
-func (s *ColumnService) Update(updatingColumn *m_column.UpdateRequest) error {
-	err := s.repo.ColumnRepo.Update(updatingColumn)
+func (s *ColumnService) Get() (*m_column.GetResponse, error) {
+	var output *m_column.GetResponse
+
+	output, err := s.repo.ColumnRepo.Get()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return output, nil
 }
-func (s *ColumnService) Delete(deletingColumn *m_column.DeleteRequest) error {
-	err := s.repo.ColumnRepo.Delete(deletingColumn)
+func (s *ColumnService) GetById(data *m_column.GetByIdRequest) (*m_column.GetByIdResponse, error) {
+	var output *m_column.GetByIdResponse
+
+	output, err := s.repo.ColumnRepo.GetById(data)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return output, nil
+}
+func (s *ColumnService) GetByBoardId(data *m_column.GetByBoardIdRequest) (*m_column.GetByBoardIdResponse, error) {
+	var output *m_column.GetByBoardIdResponse
+
+	output, err := s.repo.ColumnRepo.GetByBoardId(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+func (s *ColumnService) Update(data *m_column.UpdateRequest) (*m_column.UpdateResponse, error) {
+	var output *m_column.UpdateResponse
+
+	output, err := s.repo.ColumnRepo.Update(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+func (s *ColumnService) Delete(data *m_column.DeleteRequest) (*m_column.DeleteResponse, error) {
+	var output *m_column.DeleteResponse
+
+	output, err := s.repo.ColumnRepo.Delete(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
 }

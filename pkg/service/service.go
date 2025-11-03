@@ -9,6 +9,8 @@ import (
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/auth"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/service/board"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/service/column"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/task"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service/user"
@@ -34,7 +36,6 @@ type Project interface {
 	Update(data *m_project.UpdateRequest) (*m_project.UpdateResponse, error)
 	Delete(data *m_project.DeleteRequest) (*m_project.DeleteResponse, error)
 }
-
 type Board interface {
 	Create(data *m_board.CreateRequest) (*m_board.CreateResponse, error)
 	Get() (*m_board.GetResponse, error)
@@ -74,8 +75,8 @@ func NewService(repo *repo.Repo) *Service {
 		AuthService:    s_auth.NewAuthService(repo),
 		UserService:    s_user.NewUserService(repo),
 		ProjectService: s_project.NewProjectService(repo),
-		/*BoardService:   s_board.NewBoardService(repo),
-		ColumnService:  s_column.NewColumnService(repo),*/
-		TaskService: s_task.NewTaskService(repo),
+		BoardService:   s_board.NewBoardService(repo),
+		ColumnService:  s_column.NewColumnService(repo),
+		TaskService:    s_task.NewTaskService(repo),
 	}
 }

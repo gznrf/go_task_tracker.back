@@ -19,31 +19,21 @@ func NewBoardHandler(service *service.Service) *BoardHandler {
 }
 
 func (h *BoardHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var input m_board.Board
+	var input *m_board.CreateRequest
 
-	userId, err := utils.GetUserIdFromCtx(r)
+	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+		utils.WriteError(w, 500, err)
+		return
+	}
+
+	output, err := h.service.BoardService.Create(input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
 
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		utils.WriteError(w, 500, err)
-		return
-	}
-	if input.Name == "" || input.ProjectId <= 0 {
-		utils.WriteError(w, 400, errors.New("name and project_id is required"))
-		return
-	}
-
-	createdId, err := h.service.BoardService.Create(&input)
-	if err != nil {
-		utils.WriteError(w, 500, err)
-		return
-	}
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"user_id":    userId,
-		"created_id": createdId,
+		"data": output,
 	}); nil != err {
 		utils.WriteError(w, 500, err)
 		return
@@ -51,124 +41,106 @@ func (h *BoardHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 }
 func (h *BoardHandler) Get(w http.ResponseWriter, r *http.Request) {
-	boardsList, err := h.service.BoardService.Get()
-	if err != nil {
+	var input *m_board.GetRequest
+
+	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
 
-	userId, err := utils.GetUserIdFromCtx(r)
+	output, err := h.service.BoardService.Get()
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
 
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"userId":      userId,
-		"boards_list": boardsList,
+		"data": output,
 	}); nil != err {
 		utils.WriteError(w, 500, err)
 		return
 	}
 }
 func (h *BoardHandler) GetById(w http.ResponseWriter, r *http.Request) {
-	var input m_board.GetByIdResponse
+	var input *m_board.GetByIdRequest
 
-	userId, err := utils.GetUserIdFromCtx(r)
-	if err != nil {
-		utils.WriteError(w, 500, err)
-		return
-	}
-
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
-	if input.Id <= 0 {
-		utils.WriteError(w, 400, errors.New("id is required"))
-		return
-	}
-	outputBoard, err := h.service.BoardService.GetById(input.Id)
+
+	output, err := h.service.BoardService.GetById(input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
+
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"userId": userId,
-		"board":  outputBoard,
+		"data": output,
 	}); nil != err {
 		utils.WriteError(w, 500, err)
 		return
 	}
 }
-
 func (h *BoardHandler) GetByProjectId(w http.ResponseWriter, r *http.Request) {
-	var input m_board.GetByProjectIdResponse
+	var input *m_board.GetByProjectIdRequest
 
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
-	if input.Id <= 0 {
-		utils.WriteError(w, 400, errors.New("id is required"))
-		return
-	}
-	boardList, err := h.service.BoardService.GetByProjectId(input.Id)
+
+	output, err := h.service.BoardService.GetByProjectId(input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
+
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"board_list": boardList,
+		"data": output,
 	}); nil != err {
 		utils.WriteError(w, 500, err)
 		return
 	}
 
 }
-
 func (h *BoardHandler) Update(w http.ResponseWriter, r *http.Request) {
-	var input m_board.Board
+	var input *m_board.UpdateRequest
 
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
-	if input.Id == 0 || input.Name == "" {
-		utils.WriteError(w, 400, errors.New("board_id is required, updating_data is required"))
-		return
-	}
-	err := h.service.BoardService.Update(&input)
+
+	output, err := h.service.BoardService.Update(input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
+
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"updated_id": input.Id,
+		"data": output,
 	}); nil != err {
 		utils.WriteError(w, 500, err)
 		return
 	}
 }
-
 func (h *BoardHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	var input m_board.DeleteResponse
+	var input *m_board.DeleteRequest
 
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
-	if input.Id <= 0 {
-		utils.WriteError(w, 400, errors.New("id is required"))
-		return
-	}
-	err := h.service.BoardService.Delete(input.Id)
+
+	output, err := h.service.BoardService.Delete(input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
+
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"deleted_id": input.Id,
+		"data": output,
 	}); nil != err {
 		utils.WriteError(w, 500, err)
 		return

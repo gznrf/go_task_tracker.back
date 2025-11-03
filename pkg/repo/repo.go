@@ -8,6 +8,8 @@ import (
 	"github.com/gznrf/go_task_tracker.back.git/models/task"
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/auth"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/board"
+	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/column"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/task"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo/user"
@@ -32,7 +34,6 @@ type Project interface {
 	Update(data *m_project.UpdateRequest) (*m_project.UpdateResponse, error)
 	Delete(data *m_project.DeleteRequest) (*m_project.DeleteResponse, error)
 }
-
 type Board interface {
 	Create(data *m_board.CreateRequest) (*m_board.CreateResponse, error)
 	Get() (*m_board.GetResponse, error)
@@ -72,8 +73,8 @@ func NewRepository(db *sqlx.DB) *Repo {
 		AuthRepo:    r_auth.NewAuthRepo(db),
 		UserRepo:    r_user.NewUserRepo(db),
 		ProjectRepo: r_projects.NewProjectRepo(db),
-		/*BoardRepo:   r_board.NewBoardRepo(db),
-		ColumnRepo:  r_column.NewColumnRepo(db),*/
-		TaskRepo: r_task.NewTaskRepo(db),
+		BoardRepo:   r_board.NewBoardRepo(db),
+		ColumnRepo:  r_column.NewColumnRepo(db),
+		TaskRepo:    r_task.NewTaskRepo(db),
 	}
 }

@@ -1,9 +1,6 @@
 package r_column
 
 import (
-	"fmt"
-
-	"github.com/gznrf/go_task_tracker.back.git/app"
 	"github.com/gznrf/go_task_tracker.back.git/models/column"
 	"github.com/jmoiron/sqlx"
 )
@@ -16,60 +13,69 @@ func NewColumnRepo(db *sqlx.DB) *ColumnRepo {
 	return &ColumnRepo{db: db}
 }
 
-func (r *ColumnRepo) Create(creatingColumn *m_column.CreateRequest) (int64, error) {
-	var createdId int64
-	query := fmt.Sprintf(`INSERT INTO %s (name, board_id) VALUES ($1, $2) RETURNING id`, app.ColumnTable)
+func (r *ColumnRepo) Create(data *m_column.CreateRequest) (*m_column.CreateResponse, error) {
+	var output *m_column.CreateResponse
+	output = new(m_column.CreateResponse)
 
-	row := r.db.QueryRow(query, creatingColumn.Name, creatingColumn.BoardId)
-	if err := row.Scan(&createdId); err != nil {
-		return 0, err
+	row := r.db.QueryRow(createQuery, data.BoardId, data.Name)
+	if err := row.Scan(&output.CreatedId); err != nil {
+		return nil, err
 	}
 
-	return createdId, nil
+	return output, nil
 }
-func (r *ColumnRepo) Get() ([]m_column.Column, error) {
-	var outputColumns []m_column.Column
-	query := fmt.Sprintf(`SELECT * FROM %s`, app.ColumnTable)
-	err := r.db.Select(&outputColumns, query)
+func (r *ColumnRepo) Get() (*m_column.GetResponse, error) {
+	var output *m_column.GetResponse
+	output = new(m_column.GetResponse)
+
+	err := r.db.Select(&output.ColumnsList, getQuery)
 	if err != nil {
 		return nil, err
 	}
 
-	return outputColumns, nil
+	return output, nil
 }
-func (r *ColumnRepo) GetByBoardId(boardId int64) ([]m_column.Column, error) {
-	var outputColumns []m_column.Column
+func (r *ColumnRepo) GetByBoardId(data *m_column.GetByBoardIdRequest) (*m_column.GetByBoardIdResponse, error) {
+	var output *m_column.GetByBoardIdResponse
+	output = new(m_column.GetByBoardIdResponse)
 
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE board_id = $1`, app.ColumnTable)
-	err := r.db.Select(&outputColumns, query, boardId)
+	err := r.db.Select(&output.ColumnsList, getByBoardIdQuery, data.BoardId)
 	if err != nil {
 		return nil, err
 	}
 
-	return outputColumns, nil
+	return output, nil
 }
-func (r *ColumnRepo) GetById(columnId int64) (m_column.GetByIdResponse, error) {
-	var outputColumn m_column.GetByIdResponse
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE id = $1`, app.ColumnTable)
-	err := r.db.Get(&outputColumn, query, columnId)
+func (r *ColumnRepo) GetById(data *m_column.GetByIdRequest) (*m_column.GetByIdResponse, error) {
+	var output *m_column.GetByIdResponse
+	output = new(m_column.GetByIdResponse)
+
+	err := r.db.Get(&output, getByIdQuery, data.Id)
 	if err != nil {
-		return m_column.GetByIdResponse{}, err
+		return nil, err
 	}
 
-	return outputColumn, nil
+	return output, nil
 }
-func (r *ColumnRepo) Update(updatingColumn *m_column.UpdateRequest) error {
-	query := fmt.Sprintf(`UPDATE %s SET name = $1, board_id = $2 WHERE id = $3`, app.ColumnTable)
-	_, err := r.db.Exec(query, updatingColumn.Name, updatingColumn.BoardId, updatingColumn.Id)
+func (r *ColumnRepo) Update(data *m_column.UpdateRequest) (*m_column.UpdateResponse, error) {
+	var output *m_column.UpdateResponse
+	output = new(m_column.UpdateResponse)
 
-	return err
-}
-func (r *ColumnRepo) Delete(deletingColumn *m_column.DeleteRequest) error {
-	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, app.ColumnTable)
-	_, err := r.db.Exec(query, deletingColumn.ColumnId)
-	if err != nil {
-		return err
+	row := r.db.QueryRow(updateQuery, data.BoardId, data.Name, data.Id)
+	if err := row.Scan(&output.UpdatedId); err != nil {
+		return nil, err
 	}
 
-	return nil
+	return output, nil
+}
+func (r *ColumnRepo) Delete(data *m_column.DeleteRequest) (*m_column.DeleteResponse, error) {
+	var output *m_column.DeleteResponse
+	output = new(m_column.DeleteResponse)
+
+	row := r.db.QueryRow(deleteQuery, data.Id)
+	if err := row.Scan(&output.DeletedId); err != nil {
+		return nil, err
+	}
+
+	return output, nil
 }

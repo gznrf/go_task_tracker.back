@@ -13,45 +13,62 @@ func NewBoardService(repo *repo.Repo) *BoardService {
 	return &BoardService{repo: repo}
 }
 
-func (s *BoardService) Create(creatingBoard *m_board.Board) (int64, error) {
-	createdId, err := s.repo.BoardRepo.Create(creatingBoard)
-	if err != nil {
-		return 0, err
-	}
-	return createdId, nil
-}
-func (s *BoardService) Get() ([]m_board.Board, error) {
-	outputBoards, err := s.repo.BoardRepo.Get()
+func (s *BoardService) Create(data *m_board.CreateRequest) (*m_board.CreateResponse, error) {
+	var output *m_board.CreateResponse
+
+	output, err := s.repo.BoardRepo.Create(data)
 	if err != nil {
 		return nil, err
 	}
-	return outputBoards, nil
+
+	return output, nil
 }
-func (s *BoardService) GetById(boardId int64) (m_board.Board, error) {
-	outputBoard, err := s.repo.BoardRepo.GetById(boardId)
-	if err != nil {
-		return m_board.Board{}, err
-	}
-	return outputBoard, nil
-}
-func (s *BoardService) GetByProjectId(projectId int64) ([]m_board.Board, error) {
-	outputBoards, err := s.repo.BoardRepo.GetByProjectId(projectId)
+func (s *BoardService) Get() (*m_board.GetResponse, error) {
+	var output *m_board.GetResponse
+
+	output, err := s.repo.BoardRepo.Get()
 	if err != nil {
 		return nil, err
 	}
-	return outputBoards, nil
+
+	return output, nil
 }
-func (s *BoardService) Update(updatingBoard *m_board.Board) error {
-	err := s.repo.BoardRepo.Update(updatingBoard)
+func (s *BoardService) GetById(data *m_board.GetByIdRequest) (*m_board.GetByIdResponse, error) {
+	var output *m_board.GetByIdResponse
+
+	output, err := s.repo.BoardRepo.GetById(data)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	return output, nil
 }
-func (s *BoardService) Delete(boardId int64) error {
-	err := s.repo.BoardRepo.Delete(boardId)
+func (s *BoardService) GetByProjectId(data *m_board.GetByProjectIdRequest) (*m_board.GetByProjectIdResponse, error) {
+	var output *m_board.GetByProjectIdResponse
+
+	output, err := s.repo.BoardRepo.GetByProjectId(data)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	return output, nil
+}
+func (s *BoardService) Update(data *m_board.UpdateRequest) (*m_board.UpdateResponse, error) {
+	var output *m_board.UpdateResponse
+
+	output, err := s.repo.BoardRepo.Update(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+func (s *BoardService) Delete(data *m_board.DeleteRequest) (*m_board.DeleteResponse, error) {
+	var output *m_board.DeleteResponse
+
+	output, err := s.repo.BoardRepo.Delete(data)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
 }

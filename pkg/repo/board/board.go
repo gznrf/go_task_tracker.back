@@ -1,9 +1,6 @@
 package r_board
 
 import (
-	"fmt"
-
-	"github.com/gznrf/go_task_tracker.back.git/app"
 	"github.com/gznrf/go_task_tracker.back.git/models/board"
 	"github.com/jmoiron/sqlx"
 )
@@ -16,62 +13,70 @@ func NewBoardRepo(db *sqlx.DB) *BoardRepo {
 	return &BoardRepo{db: db}
 }
 
-func (r *BoardRepo) Create(creatingBoard *m_board.Board) (int64, error) {
-	var createdId int64
-	query := fmt.Sprintf(`INSERT INTO %s (name, project_id) VALUES ($1, $2) RETURNING id`, app.BoardTable)
+func (r *BoardRepo) Create(data *m_board.CreateRequest) (*m_board.CreateResponse, error) {
+	var output *m_board.CreateResponse
+	output = new(m_board.CreateResponse)
 
-	row := r.db.QueryRow(query, creatingBoard.Name, creatingBoard.ProjectId)
-	if err := row.Scan(&createdId); err != nil {
-		return 0, err
+	row := r.db.QueryRow(createQuery, data.Name, data.ProjectId)
+	if err := row.Scan(&output.CreatedId); err != nil {
+		return nil, err
 	}
 
-	return createdId, nil
+	return output, nil
 }
-func (r *BoardRepo) Get() ([]m_board.Board, error) {
-	var outputBoards []m_board.Board
-	query := fmt.Sprintf(`SELECT * FROM %s`, app.BoardTable)
-	err := r.db.Select(&outputBoards, query)
+func (r *BoardRepo) Get() (*m_board.GetResponse, error) {
+	var output *m_board.GetResponse
+	output = new(m_board.GetResponse)
+
+	err := r.db.Select(&output.BoardsList, getQuery)
 	if err != nil {
 		return nil, err
 	}
 
-	return outputBoards, nil
+	return output, nil
 }
-func (r *BoardRepo) GetById(boardId int64) (m_board.Board, error) {
-	var outputBoard m_board.Board
+func (r *BoardRepo) GetById(data *m_board.GetByIdRequest) (*m_board.GetByIdResponse, error) {
+	var output *m_board.GetByIdResponse
+	output = new(m_board.GetByIdResponse)
 
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE id = $1`, app.BoardTable)
-	err := r.db.Get(&outputBoard, query, boardId)
-	if err != nil {
-		return m_board.Board{}, err
-	}
-
-	return outputBoard, nil
-
-}
-func (r *BoardRepo) GetByProjectId(projectId int64) ([]m_board.Board, error) {
-	var outputBoards []m_board.Board
-
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE project_id = $1`, app.BoardTable)
-	err := r.db.Select(&outputBoards, query, projectId)
+	err := r.db.Get(&output.Board, getByIdQuery, data.Id)
 	if err != nil {
 		return nil, err
 	}
 
-	return outputBoards, nil
-}
-func (r *BoardRepo) Update(updatingBoard *m_board.Board) error {
-	query := fmt.Sprintf(`UPDATE %s SET name = $1 WHERE id = $2`, app.BoardTable)
-	_, err := r.db.Exec(query, updatingBoard.Name, updatingBoard.Id)
+	return output, nil
 
-	return err
 }
-func (r *BoardRepo) Delete(boardId int64) error {
-	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, app.BoardTable)
-	_, err := r.db.Exec(query, boardId)
+func (r *BoardRepo) GetByProjectId(data *m_board.GetByProjectIdRequest) (*m_board.GetByProjectIdResponse, error) {
+	var output *m_board.GetByProjectIdResponse
+	output = new(m_board.GetByProjectIdResponse)
+
+	err := r.db.Select(&output, getByProjectIdQuery, data.ProjectId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return output, nil
+}
+func (r *BoardRepo) Update(data *m_board.UpdateRequest) (*m_board.UpdateResponse, error) {
+	var output *m_board.UpdateResponse
+	output = new(m_board.UpdateResponse)
+
+	row := r.db.QueryRow(updateQuery, data.ProjectId, data.Name, data.Id)
+	if err := row.Scan(&output.UpdatedId); err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+func (r *BoardRepo) Delete(data *m_board.DeleteRequest) (*m_board.DeleteResponse, error) {
+	var output *m_board.DeleteResponse
+	output = new(m_board.DeleteResponse)
+
+	row := r.db.QueryRow(deleteQuery, data.Id)
+	if err := row.Scan(&output.DeletedId); err != nil {
+		return nil, err
+	}
+
+	return output, nil
 }
