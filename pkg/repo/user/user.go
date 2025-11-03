@@ -17,7 +17,7 @@ func (r *UserRepo) Get() (*m_user.GetResponse, error) {
 	var output *m_user.GetResponse
 	output = new(m_user.GetResponse)
 
-	err := r.db.Select(output, getQuery)
+	err := r.db.Select(&output.UsersList, getQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func (r *UserRepo) GetById(data *m_user.GetByIdRequest) (*m_user.GetByIdResponse
 	var output *m_user.GetByIdResponse
 	output = new(m_user.GetByIdResponse)
 
-	err := r.db.Get(output, getByIdQuery, data.Id)
+	err := r.db.Get(&output.User, getByIdQuery, data.Id)
 	if err != nil {
 		return nil, err
 	}

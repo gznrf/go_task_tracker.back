@@ -18,7 +18,7 @@ func (r *AuthRepo) RegisterUser(data *m_auth.RegisterRequest) (*m_auth.RegisterR
 	output = new(m_auth.RegisterResponse)
 
 	row := r.db.QueryRow(registerQuery, data.Name, data.Email, data.Password)
-	if err := row.Scan(output); err != nil {
+	if err := row.Scan(&output.CreatedId); err != nil {
 		return nil, err
 	}
 
@@ -33,5 +33,7 @@ func (r *AuthRepo) LoginUser(data *m_auth.LoginRequest) (*m_auth.LoginResponse, 
 	if err != nil {
 		return nil, "", err
 	}
+	output.UserId = outputUser.Id
+
 	return output, outputUser.Password, nil
 }

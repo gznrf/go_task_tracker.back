@@ -9,6 +9,6 @@ import (
 var (
 	getQuery     = fmt.Sprintf(`SELECT * FROM %s`, app.UserTable)
 	getByIdQuery = fmt.Sprintf(`SELECT * FROM %s WHERE id = $1`, app.UserTable)
-	updateQuery  = fmt.Sprintf(`UPDATE %s SET name = $1, email = $2, password_hash = $3 WHERE id = $4`, app.UserTable)
-	deleteQuery  = fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, app.UserTable)
+	updateQuery  = fmt.Sprintf(`UPDATE %s SET name = $1, email = $2, password_hash = $3 WHERE id = $4 RETURNING id`, app.UserTable)
+	deleteQuery  = fmt.Sprintf(`DELETE FROM %s WHERE id = $1 RETURNING id`, app.UserTable)
 )

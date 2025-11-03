@@ -50,7 +50,7 @@ func (r *ProjectRepo) GetById(data *m_project.GetByIdRequest) (*m_project.GetByI
 	var output *m_project.GetByIdResponse
 	output = new(m_project.GetByIdResponse)
 
-	err := r.db.Get(&output, getByIdQuery, data.Id)
+	err := r.db.Get(&output.Project, getByIdQuery, data.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ func (r *ProjectRepo) Update(data *m_project.UpdateRequest) (*m_project.UpdateRe
 	var output *m_project.UpdateResponse
 	output = new(m_project.UpdateResponse)
 
-	row := r.db.QueryRow(updateQuery, data.Id, data.OwnerId, data.Name, data.Description)
+	row := r.db.QueryRow(updateQuery, data.OwnerId, data.Name, data.Description, data.Id)
 	if err := row.Scan(&output.UpdatedId); err != nil {
 		return nil, err
 	}

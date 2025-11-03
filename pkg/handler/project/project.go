@@ -22,7 +22,7 @@ func (h *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var input *m_project.CreateRequest
 	input = new(m_project.CreateRequest)
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
@@ -50,7 +50,7 @@ func (h *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
 func (h *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
 	var input *m_project.GetRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
@@ -71,7 +71,7 @@ func (h *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
 func (h *ProjectHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	var input *m_project.GetByIdRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
@@ -92,7 +92,7 @@ func (h *ProjectHandler) GetByUserId(w http.ResponseWriter, r *http.Request) {
 	var input *m_project.GetByUserIdRequest
 	input = new(m_project.GetByUserIdRequest)
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
@@ -102,11 +102,7 @@ func (h *ProjectHandler) GetByUserId(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, 500, err)
 		return
 	}
-
-	if userId != input.UserId {
-		utils.WriteError(w, 500, errors.New("user id not match"))
-		return
-	}
+	input.UserId = userId
 
 	output, err := h.service.ProjectService.GetByUserId(input)
 	if err != nil {
@@ -124,19 +120,8 @@ func (h *ProjectHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var input *m_project.UpdateRequest
 	input = new(m_project.UpdateRequest)
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
-		return
-	}
-
-	userId, err := utils.GetUserIdFromCtx(r)
-	if err != nil {
-		utils.WriteError(w, 500, err)
-		return
-	}
-
-	if userId != input.OwnerId {
-		utils.WriteError(w, 500, errors.New("user id not match"))
 		return
 	}
 
@@ -156,7 +141,7 @@ func (h *ProjectHandler) Update(w http.ResponseWriter, r *http.Request) {
 func (h *ProjectHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	var input *m_project.DeleteRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}

@@ -11,6 +11,6 @@ var (
 	getQuery            = fmt.Sprintf(`SELECT * FROM %s`, app.BoardTable)
 	getByIdQuery        = fmt.Sprintf(`SELECT * FROM %s WHERE id = $1`, app.BoardTable)
 	getByProjectIdQuery = fmt.Sprintf(`SELECT * FROM %s WHERE project_id = $1`, app.BoardTable)
-	updateQuery         = fmt.Sprintf(`UPDATE %s SET project_id = $2, name = $1 WHERE id = $2`, app.BoardTable)
-	deleteQuery         = fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, app.BoardTable)
+	updateQuery         = fmt.Sprintf(`UPDATE %s SET project_id = $1, name = $2 WHERE id = $3 RETURNING id`, app.BoardTable)
+	deleteQuery         = fmt.Sprintf(`DELETE FROM %s WHERE id = $1 RETURNING id`, app.BoardTable)
 )

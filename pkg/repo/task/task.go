@@ -39,7 +39,7 @@ func (r *TaskRepo) GetByColumnId(data *m_task.GetByColumnIdRequest) (*m_task.Get
 	var output *m_task.GetByColumnIdResponse
 	output = new(m_task.GetByColumnIdResponse)
 
-	err := r.db.Get(&output.TasksList, getByColumnIdQuery, data.ColumnId)
+	err := r.db.Select(&output.TasksList, getByColumnIdQuery, data.ColumnId)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ func (r *TaskRepo) Update(data *m_task.UpdateRequest) (*m_task.UpdateResponse, e
 	var output *m_task.UpdateResponse
 	output = new(m_task.UpdateResponse)
 
-	row := r.db.QueryRow(updateQuery, data.Id, data.ColumnId, data.CreatorId, data.ExecutorId, data.Number, data.Name, data.Description)
+	row := r.db.QueryRow(updateQuery, data.ColumnId, data.CreatorId, data.ExecutorId, data.Number, data.Name, data.Description, data.Id)
 	if err := row.Scan(&output.UpdatedId); err != nil {
 		return nil, err
 	}

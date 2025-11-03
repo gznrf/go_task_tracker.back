@@ -50,7 +50,7 @@ func (r *ColumnRepo) GetById(data *m_column.GetByIdRequest) (*m_column.GetByIdRe
 	var output *m_column.GetByIdResponse
 	output = new(m_column.GetByIdResponse)
 
-	err := r.db.Get(&output, getByIdQuery, data.Id)
+	err := r.db.Get(&output.Column, getByIdQuery, data.Id)
 	if err != nil {
 		return nil, err
 	}

@@ -20,7 +20,7 @@ func NewColumnHandler(service *service.Service) *ColumnHandler {
 func (h *ColumnHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var input *m_column.CreateRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
@@ -41,7 +41,7 @@ func (h *ColumnHandler) Create(w http.ResponseWriter, r *http.Request) {
 func (h *ColumnHandler) Get(w http.ResponseWriter, r *http.Request) {
 	var input *m_column.GetRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
@@ -62,7 +62,7 @@ func (h *ColumnHandler) Get(w http.ResponseWriter, r *http.Request) {
 func (h *ColumnHandler) GetByBoardId(w http.ResponseWriter, r *http.Request) {
 	var input *m_column.GetByBoardIdRequest
 
-	err := json.NewDecoder(r.Body).Decode(input)
+	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
@@ -84,7 +84,7 @@ func (h *ColumnHandler) GetByBoardId(w http.ResponseWriter, r *http.Request) {
 func (h *ColumnHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	var input *m_column.GetByIdRequest
 
-	err := json.NewDecoder(r.Body).Decode(input)
+	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
@@ -107,7 +107,7 @@ func (h *ColumnHandler) GetById(w http.ResponseWriter, r *http.Request) {
 func (h *ColumnHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var input *m_column.UpdateRequest
 
-	err := json.NewDecoder(r.Body).Decode(input)
+	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
@@ -129,7 +129,7 @@ func (h *ColumnHandler) Update(w http.ResponseWriter, r *http.Request) {
 func (h *ColumnHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	var input *m_column.DeleteRequest
 
-	err := json.NewDecoder(r.Body).Decode(input)
+	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return

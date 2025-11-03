@@ -21,7 +21,7 @@ func NewBoardHandler(service *service.Service) *BoardHandler {
 func (h *BoardHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var input *m_board.CreateRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
@@ -43,7 +43,7 @@ func (h *BoardHandler) Create(w http.ResponseWriter, r *http.Request) {
 func (h *BoardHandler) Get(w http.ResponseWriter, r *http.Request) {
 	var input *m_board.GetRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
@@ -64,7 +64,7 @@ func (h *BoardHandler) Get(w http.ResponseWriter, r *http.Request) {
 func (h *BoardHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	var input *m_board.GetByIdRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
@@ -85,7 +85,7 @@ func (h *BoardHandler) GetById(w http.ResponseWriter, r *http.Request) {
 func (h *BoardHandler) GetByProjectId(w http.ResponseWriter, r *http.Request) {
 	var input *m_board.GetByProjectIdRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
@@ -107,7 +107,7 @@ func (h *BoardHandler) GetByProjectId(w http.ResponseWriter, r *http.Request) {
 func (h *BoardHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var input *m_board.UpdateRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
@@ -128,7 +128,7 @@ func (h *BoardHandler) Update(w http.ResponseWriter, r *http.Request) {
 func (h *BoardHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	var input *m_board.DeleteRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}

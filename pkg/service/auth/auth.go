@@ -36,7 +36,7 @@ func (s *AuthService) LoginUser(data *m_auth.LoginRequest) (*m_auth.LoginRespons
 		return nil, err
 	}
 
-	if passFromDb != utils.GeneratePasswordHash(data.Password) {
+	if passFromDb != data.Password {
 		return nil, errors.New("wrong password")
 	}
 

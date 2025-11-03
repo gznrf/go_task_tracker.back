@@ -6,9 +6,9 @@ CREATE TABLE user_info
     email         text   not null unique,
     password_hash text   not null,
 
-    created_at    timestamp,
-    deleted_at    timestamp,
-    updated_at    timestamp
+    created_at    timestamp DEFAULT CURRENT_TIMESTAMP,
+    deleted_at    timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at    timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE project
@@ -19,9 +19,9 @@ CREATE TABLE project
     name        text                             not null,
     description text,
 
-    created_at  timestamp,
-    deleted_at  timestamp,
-    updated_at  timestamp
+    created_at  timestamp DEFAULT CURRENT_TIMESTAMP,
+    deleted_at  timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at  timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE projects_users
@@ -31,9 +31,9 @@ CREATE TABLE projects_users
     from_id    bigint REFERENCES project (id)   not null,
     to_id      bigint REFERENCES user_info (id) not null,
 
-    created_at timestamp,
-    deleted_at timestamp,
-    updated_at timestamp
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE board
@@ -43,9 +43,9 @@ CREATE TABLE board
 
     name       text                           not null,
 
-    created_at timestamp,
-    deleted_at timestamp,
-    updated_at timestamp
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE column_info
@@ -55,9 +55,9 @@ CREATE TABLE column_info
 
     name       text                         not null,
 
-    created_at timestamp,
-    deleted_at timestamp,
-    updated_at timestamp
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE task
@@ -71,8 +71,8 @@ CREATE TABLE task
     name        text                               not null,
     description text,
 
-    created_at  timestamp,
-    deleted_at  timestamp,
-    updated_at  timestamp
+    created_at  timestamp DEFAULT CURRENT_TIMESTAMP,
+    deleted_at  timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at  timestamp DEFAULT CURRENT_TIMESTAMP
 );
 

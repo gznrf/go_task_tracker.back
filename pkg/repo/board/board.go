@@ -17,7 +17,7 @@ func (r *BoardRepo) Create(data *m_board.CreateRequest) (*m_board.CreateResponse
 	var output *m_board.CreateResponse
 	output = new(m_board.CreateResponse)
 
-	row := r.db.QueryRow(createQuery, data.Name, data.ProjectId)
+	row := r.db.QueryRow(createQuery, data.ProjectId, data.Name)
 	if err := row.Scan(&output.CreatedId); err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (r *BoardRepo) GetByProjectId(data *m_board.GetByProjectIdRequest) (*m_boar
 	var output *m_board.GetByProjectIdResponse
 	output = new(m_board.GetByProjectIdResponse)
 
-	err := r.db.Select(&output, getByProjectIdQuery, data.ProjectId)
+	err := r.db.Select(&output.BoardsList, getByProjectIdQuery, data.ProjectId)
 	if err != nil {
 		return nil, err
 	}

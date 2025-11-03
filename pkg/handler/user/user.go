@@ -21,14 +21,14 @@ func NewUserHandler(service *service.Service) *UserHandler {
 func (h *UserHandler) Get(w http.ResponseWriter, r *http.Request) {
 	var input *m_user.GetRequest
 
-	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 
-	output, err := h.service.TaskService.Get()
+	output, err := h.service.UserService.Get()
 	if err != nil {
-		utils.WriteError(w, 500, errors.New("internal server error"))
+		utils.WriteError(w, 500, err)
 		return
 	}
 
@@ -42,15 +42,15 @@ func (h *UserHandler) Get(w http.ResponseWriter, r *http.Request) {
 func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	var input *m_user.GetByIdRequest
 
-	err := json.NewDecoder(r.Body).Decode(input)
+	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
-		utils.WriteError(w, 500, errors.New("internal server error"))
+		utils.WriteError(w, 500, err)
 		return
 	}
 
 	output, err := h.service.UserService.GetById(input)
 	if err != nil {
-		utils.WriteError(w, 500, errors.New("internal server error"))
+		utils.WriteError(w, 500, err)
 		return
 	}
 
@@ -63,15 +63,15 @@ func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
 func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var input *m_user.UpdateRequest
 
-	err := json.NewDecoder(r.Body).Decode(input)
+	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
-		utils.WriteError(w, 500, errors.New("internal server error"))
+		utils.WriteError(w, 500, err)
 		return
 	}
 
 	output, err := h.service.UserService.Update(input)
 	if err != nil {
-		utils.WriteError(w, 500, errors.New("internal server error"))
+		utils.WriteError(w, 500, err)
 		return
 	}
 
@@ -85,7 +85,7 @@ func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 func (h *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	var input *m_user.DeleteRequest
 
-	err := json.NewDecoder(r.Body).Decode(input)
+	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
