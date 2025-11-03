@@ -1,1 +1,37 @@
 package m_task
+
+type CreateRequest struct {
+	ColumnId   int64 `json:"column_id" db:"column_id"`
+	CreatorId  int64 `json:"creator_id" db:"creator_id"`
+	ExecutorId int64 `json:"executor_id" db:"executor_id"`
+
+	Number      int64  `json:"number" db:"number"`
+	Name        string `json:"name" db:"name"`
+	Description string `json:"description" db:"description"`
+}
+
+type GetRequest struct {
+}
+
+type GetByColumnIdRequest struct {
+	ColumnId int64 `json:"column_id" db:"column_id"`
+}
+
+type GetByIdRequest struct {
+	Id int64 `json:"id" db:"id"`
+}
+
+type UpdateRequest struct {
+	Id         int64 `json:"id" db:"id"`
+	ColumnId   int64 `json:"column_id" db:"column_id"`
+	CreatorId  int64 `json:"creator_id" db:"creator_id"`
+	ExecutorId int64 `json:"executor_id" db:"executor_id"`
+
+	Number      int64  `json:"number" db:"number"`
+	Name        string `json:"name" db:"name"`
+	Description string `json:"description" db:"description"`
+}
+
+type DeleteRequest struct {
+	Id int64 `json:"id" db:"id"`
+}

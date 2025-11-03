@@ -22,7 +22,7 @@ type Handler struct {
 	projectHandler    *h_project.ProjectHandler
 	boardHandler      *h_board.BoardHandler
 	columnHandler     *h_column.ColumnHandler
-	taskhandler       *h_task.TaskHandler
+	taskHandler       *h_task.TaskHandler
 }
 
 func NewHandler(services *service.Service) *Handler {
@@ -33,7 +33,7 @@ func NewHandler(services *service.Service) *Handler {
 		projectHandler:    h_project.NewProjectHandler(services),
 		boardHandler:      h_board.NewBoardHandler(services),
 		columnHandler:     h_column.NewColumnHandler(services),
-		taskhandler:       h_task.NewTaskHandler(services),
+		taskHandler:       h_task.NewTaskHandler(services),
 	}
 }
 
@@ -86,12 +86,12 @@ func (h *Handler) InitRoutes() *http.Handler {
 
 					task := column.PathPrefix("/task").Subrouter()
 					{
-						task.HandleFunc("/create", nil).Methods("POST")
-						task.HandleFunc("/get", nil).Methods("GET")
-						task.HandleFunc("/getByColumnId", nil).Methods("GET")
-						task.HandleFunc("/getById", nil).Methods("GET")
-						task.HandleFunc("/update", nil).Methods("PATCH")
-						task.HandleFunc("/delete", nil).Methods("DELETE")
+						task.HandleFunc("/create", h.taskHandler.Create).Methods("POST")
+						task.HandleFunc("/get", h.taskHandler.Get).Methods("GET")
+						task.HandleFunc("/getByColumnId", h.taskHandler.GetByColumnId).Methods("GET")
+						task.HandleFunc("/getById", h.taskHandler.GetById).Methods("GET")
+						task.HandleFunc("/update", h.taskHandler.Update).Methods("PATCH")
+						task.HandleFunc("/delete", h.taskHandler.Delete).Methods("DELETE")
 					}
 
 				}

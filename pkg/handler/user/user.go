@@ -2,6 +2,7 @@ package h_user
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
@@ -18,84 +19,86 @@ func NewUserHandler(service *service.Service) *UserHandler {
 }
 
 func (h *UserHandler) Get(w http.ResponseWriter, r *http.Request) {
-	outputUsers, err := h.service.UserService.Get()
+	var input *m_user.GetRequest
+
+	if err := json.NewDecoder(r.Body).Decode(input); err != nil {
+		utils.WriteError(w, 500, errors.New("internal server error"))
+		return
+	}
+
+	output, err := h.service.TaskService.Get()
 	if err != nil {
-		utils.WriteError(w, 500, err)
+		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"users": outputUsers,
-	}); err != nil {
+		"data": output,
+	}); nil != err {
 		utils.WriteError(w, 500, err)
 		return
 	}
 }
-
 func (h *UserHandler) GetById(w http.ResponseWriter, r *http.Request) {
-	userId, err := utils.GetUserIdFromCtx(r)
+	var input *m_user.GetByIdRequest
+
+	err := json.NewDecoder(r.Body).Decode(input)
 	if err != nil {
-		utils.WriteError(w, 500, err)
+		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 
-	user, err := h.service.UserService.GetById(userId)
+	output, err := h.service.UserService.GetById(input)
 	if err != nil {
-		utils.WriteError(w, 500, err)
+		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 
-	res := m_user.GetUserByIdResponse{
-		User: user,
-	}
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"user": res.User,
+		"data": output,
 	}); err != nil {
 		utils.WriteError(w, 500, err)
 	}
 }
-
 func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
-	var input m_user.UpdateUserRequest
-	userId, err := utils.GetUserIdFromCtx(r)
+	var input *m_user.UpdateRequest
+
+	err := json.NewDecoder(r.Body).Decode(input)
 	if err != nil {
-		utils.WriteError(w, 500, err)
+		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		utils.WriteError(w, 500, err)
-		return
-	}
-	input.UserId = userId
-	err = h.service.UserService.Update(&input)
+
+	output, err := h.service.UserService.Update(input)
 	if err != nil {
-		utils.WriteError(w, 500, err)
+		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"updated_id": input.UserId,
+		"data": output,
 	}); err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
 }
-
 func (h *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	userId, err := utils.GetUserIdFromCtx(r)
+	var input *m_user.DeleteRequest
+
+	err := json.NewDecoder(r.Body).Decode(input)
 	if err != nil {
-		utils.WriteError(w, 500, err)
+		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 
-	err = h.service.UserService.Delete(userId)
+	output, err := h.service.UserService.Delete(input)
 	if err != nil {
-		utils.WriteError(w, 500, err)
+		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"is_user_deleted": "true",
+		"data": output,
 	}); err != nil {
 		utils.WriteError(w, 500, err)
 		return

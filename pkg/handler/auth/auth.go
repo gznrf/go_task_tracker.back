@@ -19,76 +19,51 @@ func NewAuthHandler(service *service.Service) *AuthHandler {
 }
 
 func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
-	var input m_auth.RegisterRequest
+	var input *m_auth.RegisterRequest
 
-	w.Header().Add("Content-Type", "application/json")
-
-	err := json.NewDecoder(r.Body).Decode(&input)
+	err := json.NewDecoder(r.Body).Decode(input)
 	if err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 
-	if input.Username == "" || input.Password == "" {
-		utils.WriteError(w, 400, errors.New("username or password is empty"))
-		return
-	}
-
-	createdId, err := h.service.AuthService.CreateUser(input.Username, input.Password)
+	output, err := h.service.AuthService.RegisterUser(input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
 
-	token, err := utils.GenerateToken(createdId)
-
-	res := m_auth.RegisterResponse{
-		Token:         token,
-		CreatedUserId: createdId,
-	}
 	if err := utils.WriteJson(w, http.StatusOK, map[string]interface{}{
-		"created_id": res.CreatedUserId,
-		"token":      res.Token,
+		"data": output,
 	}); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 }
-
 func (h *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
-	var input m_auth.LoginRequest
+	var input *m_auth.LoginRequest
 
-	w.Header().Add("Content-Type", "application/json")
-
-	err := json.NewDecoder(r.Body).Decode(&input)
+	err := json.NewDecoder(r.Body).Decode(input)
 	if err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
 	}
 
-	if input.Username == "" || input.Password == "" {
-		utils.WriteError(w, 400, errors.New("username or password is empty"))
-		return
-	}
-
-	createdId, err := h.service.AuthService.LoginUser(input.Username, input.Password)
+	output, err := h.service.AuthService.LoginUser(input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
 
-	token, err := utils.GenerateToken(createdId)
+	token, err := utils.GenerateToken(output.UserId)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
-
-	res := m_auth.LoginResponse{
-		Token: token,
-	}
+	utils.SetTokenToCookie(w, token)
 
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
-		"token": res.Token,
+		"data": output,
 	}); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return

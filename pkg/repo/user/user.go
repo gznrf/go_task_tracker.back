@@ -1,9 +1,6 @@
 package r_user
 
 import (
-	"fmt"
-
-	"github.com/gznrf/go_task_tracker.back.git/app"
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
 	"github.com/jmoiron/sqlx"
 )
@@ -16,37 +13,47 @@ func NewUserRepo(db *sqlx.DB) *UserRepo {
 	return &UserRepo{db: db}
 }
 
-func (r *UserRepo) Get() ([]m_user.User, error) {
-	var outputUsers []m_user.User
-	query := fmt.Sprintf(`SELECT * FROM %s`, app.UserTable)
-	err := r.db.Select(&outputUsers, query)
+func (r *UserRepo) Get() (*m_user.GetResponse, error) {
+	var output *m_user.GetResponse
+	output = new(m_user.GetResponse)
+
+	err := r.db.Select(output, getQuery)
 	if err != nil {
 		return nil, err
 	}
 
-	return outputUsers, nil
+	return output, nil
 }
-func (r *UserRepo) GetById(userID int64) (m_user.User, error) {
-	var outputUser m_user.User
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE id = $1`, app.UserTable)
-	err := r.db.Get(&outputUser, query, userID)
+func (r *UserRepo) GetById(data *m_user.GetByIdRequest) (*m_user.GetByIdResponse, error) {
+	var output *m_user.GetByIdResponse
+	output = new(m_user.GetByIdResponse)
+
+	err := r.db.Get(output, getByIdQuery, data.Id)
 	if err != nil {
-		return m_user.User{}, err
+		return nil, err
 	}
 
-	return outputUser, nil
+	return output, nil
 }
-func (r *UserRepo) Update(updatingData *m_user.UpdateUserRequest) error {
-	query := fmt.Sprintf(`UPDATE %s SET name = $1 WHERE id = $2`, app.UserTable)
-	_, err := r.db.Exec(query, updatingData.Username, updatingData.UserId)
+func (r *UserRepo) Update(data *m_user.UpdateRequest) (*m_user.UpdateResponse, error) {
+	var output *m_user.UpdateResponse
+	output = new(m_user.UpdateResponse)
 
-	return err
-}
-func (r *UserRepo) Delete(userId int64) error {
-	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, app.UserTable)
-	_, err := r.db.Exec(query, userId)
-	if err != nil {
-		return err
+	row := r.db.QueryRow(updateQuery, data.Name, data.Email, data.Password, data.Id)
+	if err := row.Scan(&output.UpdatedId); err != nil {
+		return nil, err
 	}
-	return nil
+
+	return output, nil
+}
+func (r *UserRepo) Delete(data *m_user.DeleteRequest) (*m_user.DeleteResponse, error) {
+	var output *m_user.DeleteResponse
+	output = new(m_user.DeleteResponse)
+
+	row := r.db.QueryRow(deleteQuery, data.Id)
+	if err := row.Scan(&output.DeletedId); err != nil {
+		return nil, err
+	}
+
+	return output, nil
 }

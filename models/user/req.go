@@ -1,14 +1,16 @@
 package m_user
 
-type GetUserByIdRequest struct {
-	Token string `json:"token"`
+type GetRequest struct {
 }
-
-type UpdateUserRequest struct {
-	UserId   int64  `json:"id"`
-	Username string `json:"name" db:"name"`
+type GetByIdRequest struct {
+	Id int64 `json:"id" db:"id"`
 }
-
-type DeleteUserRequest struct {
-	Token string `json:"token"`
+type UpdateRequest struct {
+	Id       int64  `json:"id" db:"id"`
+	Name     string `json:"name" db:"name"`
+	Email    string `json:"email" db:"email"`
+	Password string `json:"password" db:"password_hash"`
+}
+type DeleteRequest struct {
+	Id int64 `json:"id" db:"id"`
 }

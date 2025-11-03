@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -44,4 +45,17 @@ func ParseToken(accessToken string) (int64, error) {
 	}
 
 	return tclaims.UserId, nil
+}
+
+func SetTokenToCookie(w http.ResponseWriter, token string) {
+	cookie := &http.Cookie{
+		Name:     "auth_token",
+		Value:    token,
+		Expires:  time.Now().Add(24 * time.Hour),
+		HttpOnly: true,
+		Secure:   true,
+		Path:     "/",
+		SameSite: http.SameSiteLaxMode,
+	}
+	http.SetCookie(w, cookie)
 }

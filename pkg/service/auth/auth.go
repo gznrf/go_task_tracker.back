@@ -3,6 +3,7 @@ package s_auth
 import (
 	"errors"
 
+	"github.com/gznrf/go_task_tracker.back.git/models/auth"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo"
 	"github.com/gznrf/go_task_tracker.back.git/utils"
 )
@@ -15,24 +16,29 @@ func NewAuthService(repo *repo.Repo) *AuthService {
 	return &AuthService{repo: repo}
 }
 
-func (s *AuthService) CreateUser(username string, password string) (int64, error) {
-	createdUserId, err := s.repo.AuthRepo.CreateUser(username, utils.GeneratePasswordHash(password))
+func (s *AuthService) RegisterUser(data *m_auth.RegisterRequest) (*m_auth.RegisterResponse, error) {
+	var output *m_auth.RegisterResponse
+
+	data.Password = utils.GeneratePasswordHash(data.Password)
+	output, err := s.repo.AuthRepo.RegisterUser(data)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	return createdUserId, err
+	return output, nil
 }
+func (s *AuthService) LoginUser(data *m_auth.LoginRequest) (*m_auth.LoginResponse, error) {
+	var output *m_auth.LoginResponse
 
-func (s *AuthService) LoginUser(username string, password string) (int64, error) {
-	gotUser, err := s.repo.AuthRepo.GetUser(username, utils.GeneratePasswordHash(password))
+	data.Password = utils.GeneratePasswordHash(data.Password)
+	output, passFromDb, err := s.repo.AuthRepo.LoginUser(data)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	if gotUser.Password != utils.GeneratePasswordHash(password) {
-		return 0, errors.New("wrong password")
+	if passFromDb != utils.GeneratePasswordHash(data.Password) {
+		return nil, errors.New("wrong password")
 	}
 
-	return gotUser.Id, err
+	return output, err
 }

@@ -1,6 +1,8 @@
 package m_task
 
-import "time"
+import (
+	"github.com/gznrf/go_task_tracker.back.git/models"
+)
 
 type Task struct {
 	Id         int64 `json:"id" db:"id"`
@@ -12,7 +14,5 @@ type Task struct {
 	Name        string `json:"name" db:"name"`
 	Description string `json:"description" db:"description"`
 
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	DeletedAt time.Time `json:"deleted_at" db:"deleted_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	models.SoftDelete
 }

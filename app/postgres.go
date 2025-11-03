@@ -7,11 +7,12 @@ import (
 )
 
 const (
-	UserTable          = "user_info"
-	ProjectTable       = "project"
-	ProjectsUsersTable = "projects_users"
-	BoardTable         = "board"
-	ColumnTable        = "column_info"
+	UserTable    = "user_info"
+	ProjectTable = "project"
+	//ProjectsUsersTable = "projects_users"
+	BoardTable  = "board"
+	ColumnTable = "column_info"
+	TaskTable   = "task"
 )
 
 type Config struct {

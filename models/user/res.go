@@ -1,17 +1,14 @@
 package m_user
 
-type GetUsersResponse struct {
-	Users []User `json:"users"`
+type GetResponse struct {
+	UsersList []User `json:"users_list"`
 }
-
-type GetUserByIdResponse struct {
+type GetByIdResponse struct {
 	User User `json:"user"`
 }
-
-type UpdateUserResponse struct {
-	IsUpdated bool `json:"is_updated"`
+type UpdateResponse struct {
+	UpdatedId int64 `json:"updated_id"`
 }
-
-type DeleteUserResponse struct {
-	IsDeleted bool `json:"is_deleted"`
+type DeleteResponse struct {
+	DeletedId int64 `json:"deleted_id"`
 }

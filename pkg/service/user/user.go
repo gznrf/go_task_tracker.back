@@ -3,6 +3,7 @@ package s_user
 import (
 	"github.com/gznrf/go_task_tracker.back.git/models/user"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo"
+	"github.com/gznrf/go_task_tracker.back.git/utils"
 )
 
 type UserService struct {
@@ -13,32 +14,44 @@ func NewUserService(repo *repo.Repo) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (s *UserService) Get() ([]m_user.User, error) {
-	usersList, err := s.repo.UserRepo.Get()
+func (s *UserService) Get() (*m_user.GetResponse, error) {
+	var output *m_user.GetResponse
+
+	output, err := s.repo.UserRepo.Get()
 	if err != nil {
 		return nil, err
 	}
-	return usersList, nil
+
+	return output, nil
 }
-func (s *UserService) GetById(userId int64) (m_user.User, error) {
-	user, err := s.repo.UserRepo.GetById(userId)
+func (s *UserService) GetById(data *m_user.GetByIdRequest) (*m_user.GetByIdResponse, error) {
+	var output *m_user.GetByIdResponse
+
+	output, err := s.repo.UserRepo.GetById(data)
 	if err != nil {
-		return m_user.User{}, err
+		return nil, err
 	}
 
-	return user, nil
+	return output, nil
 }
-func (s *UserService) Update(inputData *m_user.UpdateUserRequest) error {
-	err := s.repo.UserRepo.Update(inputData)
+func (s *UserService) Update(data *m_user.UpdateRequest) (*m_user.UpdateResponse, error) {
+	var output *m_user.UpdateResponse
+
+	data.Password = utils.GeneratePasswordHash(data.Password)
+	output, err := s.repo.UserRepo.Update(data)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	return output, nil
 }
-func (s *UserService) Delete(userId int64) error {
-	err := s.repo.UserRepo.Delete(userId)
+func (s *UserService) Delete(data *m_user.DeleteRequest) (*m_user.DeleteResponse, error) {
+	var output *m_user.DeleteResponse
+
+	output, err := s.repo.UserRepo.Delete(data)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	return output, nil
 }

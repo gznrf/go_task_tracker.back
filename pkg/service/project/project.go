@@ -1,8 +1,6 @@
 package s_project
 
 import (
-	"errors"
-
 	"github.com/gznrf/go_task_tracker.back.git/models/project"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/repo"
 )
@@ -15,71 +13,62 @@ func NewProjectService(repo *repo.Repo) *ProjectService {
 	return &ProjectService{repo: repo}
 }
 
-func (s *ProjectService) Create(creatorId int64, creatingProject *m_project.Project) (int64, error) {
-	createdId, err := s.repo.ProjectRepo.Create(creatorId, creatingProject)
-	if err != nil {
-		return 0, err
-	}
+func (s *ProjectService) Create(data *m_project.CreateRequest) (*m_project.CreateResponse, error) {
+	var output *m_project.CreateResponse
 
-	return createdId, nil
-}
-func (s *ProjectService) Get() ([]m_project.Project, error) {
-	return s.repo.ProjectRepo.Get()
-}
-func (s *ProjectService) GetByUserId(userId int64) ([]m_project.Project, error) {
-	usersProjects, err := s.repo.ProjectRepo.GetByUserId(userId)
+	output, err := s.repo.ProjectRepo.Create(data)
 	if err != nil {
 		return nil, err
 	}
-	return usersProjects, nil
+
+	return output, nil
 }
-func (s *ProjectService) GetById(projectId int64) (m_project.Project, error) {
-	outputProject, err := s.repo.ProjectRepo.GetById(projectId)
+func (s *ProjectService) Get() (*m_project.GetResponse, error) {
+	var output *m_project.GetResponse
+
+	output, err := s.repo.ProjectRepo.Get()
 	if err != nil {
-		return m_project.Project{}, nil
-	}
-	return outputProject, nil
-}
-func (s *ProjectService) Update(creatorId int64, updatingProject *m_project.Project) error {
-	isOwner, err := s.CheckIsOwner(creatorId, updatingProject.Id)
-	if err != nil {
-		return err
-	}
-	// if owner --> update project else --> doesn't update
-	if isOwner {
-		err = s.repo.ProjectRepo.Update(updatingProject)
-		if err != nil {
-			return err
-		}
-		return nil
+		return nil, err
 	}
 
-	return errors.New("user isn't owner of this project")
+	return output, nil
 }
-func (s *ProjectService) Delete(creatorId int64, projectId int64) error {
-	isOwner, err := s.CheckIsOwner(creatorId, projectId)
+func (s *ProjectService) GetByUserId(data *m_project.GetByUserIdRequest) (*m_project.GetByUserIdResponse, error) {
+	var output *m_project.GetByUserIdResponse
+
+	output, err := s.repo.ProjectRepo.GetByUserId(data)
 	if err != nil {
-		return err
-	}
-	// if owner --> delete project else --> doesn't delete
-	if isOwner {
-		err = s.repo.ProjectRepo.Delete(projectId)
-		if err != nil {
-			return err
-		}
-		return nil
+		return nil, err
 	}
 
-	return errors.New("user isn't owner of this project")
+	return output, nil
 }
+func (s *ProjectService) GetById(data *m_project.GetByIdRequest) (*m_project.GetByIdResponse, error) {
+	var output *m_project.GetByIdResponse
 
-func (s *ProjectService) CheckIsOwner(creatorId int64, projectId int64) (bool, error) {
-	isOwner, err := s.repo.ProjectRepo.CheckIsOwner(creatorId, projectId)
+	output, err := s.repo.ProjectRepo.GetById(data)
 	if err != nil {
-		return false, err
+		return nil, nil
 	}
-	if isOwner {
-		return true, nil
+	return output, nil
+}
+func (s *ProjectService) Update(data *m_project.UpdateRequest) (*m_project.UpdateResponse, error) {
+	var output *m_project.UpdateResponse
+
+	output, err := s.repo.ProjectRepo.Update(data)
+	if err != nil {
+		return nil, err
 	}
-	return false, nil
+
+	return output, nil
+}
+func (s *ProjectService) Delete(data *m_project.DeleteRequest) (*m_project.DeleteResponse, error) {
+	var output *m_project.DeleteResponse
+
+	output, err := s.repo.ProjectRepo.Delete(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
 }
