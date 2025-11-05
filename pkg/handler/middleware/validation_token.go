@@ -2,6 +2,7 @@ package h_middleware
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -23,25 +24,55 @@ func NewMiddleWareHandler() *MiddleWareHandler {
 
 func (h *MiddleWareHandler) UserIdentity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var userId int64
 		header := r.Header.Get(authorizationHeader)
 		if header == "" {
-			utils.WriteError(w, 401, fmt.Errorf("empty auth header"))
+			cookie, err := r.Cookie("auth_token")
+			if err != nil {
+				if errors.Is(err, http.ErrNoCookie) {
+					http.Error(w, "Unauthorized", http.StatusUnauthorized)
+					return
+				}
+				http.Error(w, "Bad Request", http.StatusBadRequest)
+				return
+			}
+			userId, err = findInCookie(cookie)
+			if err != nil {
+				http.Error(w, "Unauthorized", http.StatusBadRequest)
+				return
+			}
+			ctx := context.WithValue(r.Context(), userCtx, userId)
+			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
-
-		headerParts := strings.Split(header, " ")
-		if len(headerParts) != 2 {
-			utils.WriteError(w, 401, fmt.Errorf("invalid auth header"))
-			return
-		}
-
-		userId, err := utils.ParseToken(headerParts[1])
+		userId, err := findInHeaders(header)
 		if err != nil {
-			utils.WriteError(w, 401, fmt.Errorf("invalid auth header"))
+			http.Error(w, "Unauthorized", http.StatusBadRequest)
 			return
 		}
 
 		ctx := context.WithValue(r.Context(), userCtx, userId)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func findInHeaders(header string) (int64, error) {
+	headerParts := strings.Split(header, " ")
+	if len(headerParts) != 2 {
+		return 0, fmt.Errorf("invalid header")
+	}
+
+	userId, err := utils.ParseToken(headerParts[1])
+	if err != nil {
+		return 0, err
+	}
+	return userId, nil
+}
+func findInCookie(cookie *http.Cookie) (int64, error) {
+	token := cookie.Value
+	userId, err := utils.ParseToken(token)
+	if err != nil {
+		return 0, err
+	}
+	return userId, nil
 }

@@ -48,12 +48,12 @@ func (h *ProjectHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func (h *ProjectHandler) Get(w http.ResponseWriter, r *http.Request) {
-	var input *m_project.GetRequest
+	/*var input *m_project.GetRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, err)
 		return
-	}
+	}*/
 
 	output, err := h.service.ProjectService.Get()
 	if err != nil {
@@ -92,10 +92,10 @@ func (h *ProjectHandler) GetByUserId(w http.ResponseWriter, r *http.Request) {
 	var input *m_project.GetByUserIdRequest
 	input = new(m_project.GetByUserIdRequest)
 
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+	/*if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
-	}
+	}*/
 
 	userId, err := utils.GetUserIdFromCtx(r)
 	if err != nil {

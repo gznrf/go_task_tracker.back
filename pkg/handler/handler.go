@@ -45,6 +45,12 @@ func (h *Handler) InitRoutes() *http.Handler {
 		auth.HandleFunc("/sign-up", h.authHandler.SignUp).Methods("POST")
 		auth.HandleFunc("/sign-in", h.authHandler.SignIn).Methods("POST")
 	}
+	auth2 := router.PathPrefix("/auth2").Subrouter()
+	auth2.Use(h.middleWareHandler.UserIdentity)
+	{
+		auth2.HandleFunc("/isAuth", h.authHandler.IsAuth).Methods("POST")
+		auth2.HandleFunc("/logout", h.authHandler.Logout).Methods("POST")
+	}
 
 	api := router.PathPrefix("/api").Subrouter()
 	{
@@ -109,6 +115,7 @@ func applyCORS(h http.Handler) http.Handler {
 		handlers.AllowedOrigins([]string{
 			"http://localhost:63342",
 			"http://127.0.0.1:63342",
+			"http://localhost:5173",
 		}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),

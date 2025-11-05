@@ -49,7 +49,7 @@ func ParseToken(accessToken string) (int64, error) {
 
 func SetTokenToCookie(w http.ResponseWriter, token string) {
 	cookie := &http.Cookie{
-		Name:     "auth_token",
+		Name:     "Bearer",
 		Value:    token,
 		Expires:  time.Now().Add(24 * time.Hour),
 		HttpOnly: true,

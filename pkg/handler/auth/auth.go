@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/gznrf/go_task_tracker.back.git/models/auth"
 	"github.com/gznrf/go_task_tracker.back.git/pkg/service"
@@ -64,6 +65,27 @@ func (h *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 
 	if err := utils.WriteJson(w, 200, map[string]interface{}{
 		"data": output,
+	}); err != nil {
+		utils.WriteError(w, 500, errors.New("internal server error"))
+		return
+	}
+}
+func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "token",
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	})
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *AuthHandler) IsAuth(w http.ResponseWriter, r *http.Request) {
+	if err := utils.WriteJson(w, http.StatusOK, map[string]interface{}{
+		"data": nil,
 	}); err != nil {
 		utils.WriteError(w, 500, errors.New("internal server error"))
 		return
