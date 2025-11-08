@@ -24,7 +24,7 @@ jobs:
         run: go build ./...
 
   deploy:
-    needs: build-and-test #после успешной сборки и тестов
+    needs: build-and-test #после успешнойсборки и тестов
     runs-on: ubuntu-latest
 
     steps:
@@ -43,4 +43,4 @@ jobs:
             cd go_task_tracker.back
             git pull origin main
             go build -o golang_back
-            sudo systemctl restart golang_back.service
+            systemctl restart golang_back.service
