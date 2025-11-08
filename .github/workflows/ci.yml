@@ -40,7 +40,6 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            mkdir -p golang_back
             cd golang_back
             git pull origin main
             go build -o golang_back
