@@ -43,4 +43,4 @@ jobs:
             cd golang_back
             git pull origin main
             go build -o golang_back
-            sudo systemctl restart golang_back.service 
+            sudo systemctl restart golang_back.service
