@@ -40,7 +40,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            cd golang_back
+            cd go_task_tracker.back
             git pull origin main
             go build -o golang_back
             sudo systemctl restart golang_back.service
