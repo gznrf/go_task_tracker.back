@@ -72,7 +72,7 @@ func (h *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 }
 func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
-		Name:     "token",
+		Name:     "auth_token",
 		Value:    "",
 		Path:     "/",
 		Expires:  time.Unix(0, 0),
