@@ -24,7 +24,7 @@ jobs:
         run: go build ./...
 
   deploy:
-    needs: build-and-test # Запускать после успешной сборки и тестов
+    needs: build-and-test #после успешной сборки и тестов
     runs-on: ubuntu-latest
 
     steps:
