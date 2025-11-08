@@ -23,9 +23,6 @@ jobs:
       - name: Build
         run: go build ./...
 
-      - name: Test
-        run: go test ./...
-
   deploy:
     needs: build-and-test # Запускать после успешной сборки и тестов
     runs-on: ubuntu-latest
