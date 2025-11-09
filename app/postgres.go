@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"os/exec"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -25,8 +26,9 @@ type Config struct {
 }
 
 func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
-	db, err := sqlx.Open("postgres", fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
-		cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DBName, cfg.SSLMode))
+	databaseConnectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
+		cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DBName, cfg.SSLMode)
+	db, err := sqlx.Open("postgres", databaseConnectionString)
 	if err != nil {
 		return nil, err
 	}
@@ -36,5 +38,28 @@ func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
 		return nil, err
 	}
 
+	err = createTables(databaseConnectionString)
+	if err != nil {
+		return nil, err
+	}
+
 	return db, nil
+}
+
+func createTables(connString string) error {
+	cmd := exec.Command(
+		"migrate",
+		"-path", "./migration",
+		"-database", connString,
+		"-verbose",
+		"up",
+	)
+
+	res, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(res))
+	return nil
 }

@@ -33,7 +33,6 @@ func initDatabase() (*sqlx.DB, error) {
 		Password: os.Getenv("DB_PASSWORD"),
 	}
 	db, err := app.NewPostgresDB(c)
-
 	if err != nil {
 		return nil, err
 	}

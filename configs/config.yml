@@ -1,10 +1,9 @@
 port: "2003"
 
 db:
-  host: "127.0.0.1"
-  port: "5432"
-  username: "gznrf"
-  password: ""
+  host: "localhost"
+  port: 5432
+  username: "postgres"
   dbname: "gtt_db"
   sslmode: "disable"
 
