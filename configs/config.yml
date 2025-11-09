@@ -1,7 +1,7 @@
 port: "2003"
 
 db:
-  host: "localhost"
+  host: "db"
   port: 5432
   username: "postgres"
   dbname: "gtt_db"
