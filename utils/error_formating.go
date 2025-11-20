@@ -8,7 +8,7 @@ import (
 )
 
 func WriteJson(w http.ResponseWriter, status int, v any) error {
-	w.Header().Set("Access-Control-Allow-Origin", "http://195.133.77.31:3321")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
