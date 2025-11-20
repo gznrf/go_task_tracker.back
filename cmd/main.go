@@ -23,13 +23,14 @@ func initConfig() error {
 }
 
 func initDatabase() (*sqlx.DB, error) {
+	dbMode := viper.GetString("mode")
 
 	c := app.Config{
-		Host:     viper.GetString("db.host"),
-		Port:     viper.GetString("db.port"),
-		Username: viper.GetString("db.username"),
-		DBName:   viper.GetString("db.dbname"),
-		SSLMode:  viper.GetString("db.sslmode"),
+		Host:     viper.GetString(fmt.Sprintf("%s.db.host", dbMode)),
+		Port:     viper.GetString(fmt.Sprintf("%s.db.port", dbMode)),
+		Username: viper.GetString(fmt.Sprintf("%s.db.username", dbMode)),
+		DBName:   viper.GetString(fmt.Sprintf("%s.db.dbname", dbMode)),
+		SSLMode:  viper.GetString(fmt.Sprintf("%s.db.sslmode", dbMode)),
 		Password: os.Getenv("DB_PASSWORD"),
 	}
 	db, err := app.NewPostgresDB(c)

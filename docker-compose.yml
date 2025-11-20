@@ -14,7 +14,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - back_network
+      - tracker_network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d gtt_db" ]
       interval: 5s
@@ -34,9 +34,9 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - back_network
+      - tracker_network
 volumes:
   pgdata:
 
 networks:
-  back_network:
+  tracker_network:
