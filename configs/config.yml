@@ -1,4 +1,4 @@
-port: "2002"
+port: "3322"
 
 mode: "dev"
 
