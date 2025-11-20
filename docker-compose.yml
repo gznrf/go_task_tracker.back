@@ -31,8 +31,8 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    ports:
-      - "8231:8080"
+    expose:
+      - "8235"
     networks:
       - tracker_network
 volumes:
