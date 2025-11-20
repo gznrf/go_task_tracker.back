@@ -32,7 +32,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8080:8080"
+      - "8231:8080"
     networks:
       - tracker_network
 volumes:
