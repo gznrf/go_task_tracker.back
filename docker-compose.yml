@@ -31,8 +31,8 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    expose:
-      - "8235"
+    ports:
+      - "3322:3322"
     networks:
       - tracker_network
 volumes:
