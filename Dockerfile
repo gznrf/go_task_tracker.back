@@ -8,6 +8,6 @@ RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate
 
 RUN go build -o main ./cmd/
 
-EXPOSE 8080
+EXPOSE 3322
 
 CMD ["./main"]
