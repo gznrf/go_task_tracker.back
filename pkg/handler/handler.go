@@ -105,14 +105,11 @@ func (h *Handler) InitRoutes() http.Handler {
 		}
 	}
 
-	return applyCORS(router)
-}
-
-func applyCORS(h http.Handler) http.Handler {
-	return handlers.CORS(
+	handler := handlers.CORS(
 		handlers.AllowedOrigins([]string{"http://195.133.77.31:3321"}),
-		handlers.AllowedMethods([]string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
-	)(h)
-	//
+	)(router)
+
+	return handler
 }
