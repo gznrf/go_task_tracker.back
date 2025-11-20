@@ -119,4 +119,5 @@ func applyCORS(h http.Handler) http.Handler {
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
 		handlers.AllowCredentials(),
 	)(h)
+	//
 }
