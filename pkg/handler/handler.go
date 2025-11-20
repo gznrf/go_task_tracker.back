@@ -37,7 +37,7 @@ func NewHandler(services *service.Service) *Handler {
 	}
 }
 
-func (h *Handler) InitRoutes() *http.Handler {
+func (h *Handler) InitRoutes() http.Handler {
 	router := mux.NewRouter()
 
 	auth := router.PathPrefix("/auth").Subrouter()
@@ -105,14 +105,12 @@ func (h *Handler) InitRoutes() *http.Handler {
 		}
 	}
 
-	a := applyCORS(router)
-
-	return &a
+	return applyCORS(router)
 }
 
 func applyCORS(h http.Handler) http.Handler {
 	return handlers.CORS(
-		handlers.AllowedOrigins([]string{"http://195.133.77.31:3321/"}),
+		handlers.AllowedOrigins([]string{"http://195.133.77.31:3321"}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
 	)(h)

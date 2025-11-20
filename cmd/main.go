@@ -65,7 +65,7 @@ func main() {
 	h := initHandler(db)
 	srv := new(app.Server)
 	go func() {
-		if err := srv.Run(fmt.Sprintf(":"+viper.GetString("port")), *h.InitRoutes()); err != nil {
+		if err := srv.Run(fmt.Sprintf(":"+viper.GetString("port")), h.InitRoutes()); err != nil {
 			err := fmt.Errorf("Server run error %s", err.Error())
 			panic(err)
 		}
