@@ -113,11 +113,10 @@ func (h *Handler) InitRoutes() *http.Handler {
 func applyCORS(h http.Handler) http.Handler {
 	return handlers.CORS(
 		handlers.AllowedOrigins([]string{
-			"http://195.133.77.31:3321/",
+			"*",
 		}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
-		handlers.AllowCredentials(),
 	)(h)
 	//
 }
