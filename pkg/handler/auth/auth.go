@@ -20,7 +20,7 @@ func NewAuthHandler(service *service.Service) *AuthHandler {
 }
 
 func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
-	var input *m_auth.RegisterRequest
+	var input m_auth.RegisterRequest
 
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
@@ -28,7 +28,7 @@ func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := h.service.AuthService.RegisterUser(input)
+	output, err := h.service.AuthService.RegisterUser(&input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
@@ -42,7 +42,7 @@ func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func (h *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
-	var input *m_auth.LoginRequest
+	var input m_auth.LoginRequest
 
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
@@ -50,7 +50,7 @@ func (h *AuthHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := h.service.AuthService.LoginUser(input)
+	output, err := h.service.AuthService.LoginUser(&input)
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
