@@ -1,6 +1,6 @@
 port: "3322"
 
-mode: "dev"
+mode: "prod"
 
 dev:
   db:
