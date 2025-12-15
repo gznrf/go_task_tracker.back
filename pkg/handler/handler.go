@@ -105,7 +105,8 @@ func (h *Handler) InitRoutes() http.Handler {
 		}
 	}
 
-	return applyCORS(router)
+	applyCORS(router)
+	return router
 }
 
 func applyCORS(h http.Handler) http.Handler {
@@ -116,5 +117,4 @@ func applyCORS(h http.Handler) http.Handler {
 
 		handlers.AllowCredentials(),
 	)(h)
-
 }
