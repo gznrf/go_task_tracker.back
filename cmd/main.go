@@ -42,7 +42,6 @@ func initDatabase() (*sqlx.DB, error) {
 }
 
 func initHandler(db *sqlx.DB) *handler.Handler {
-
 	//auth
 	r := repo.NewRepository(db)
 	s := service.NewService(r)
