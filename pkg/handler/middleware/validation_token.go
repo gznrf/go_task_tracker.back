@@ -24,6 +24,10 @@ func NewMiddleWareHandler() *MiddleWareHandler {
 
 func (h *MiddleWareHandler) UserIdentity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
 		var userId int64
 		header := r.Header.Get(authorizationHeader)
 		if header == "" {
