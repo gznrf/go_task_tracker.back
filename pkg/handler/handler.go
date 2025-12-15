@@ -39,7 +39,7 @@ func NewHandler(services *service.Service) *Handler {
 
 func (h *Handler) InitRoutes() http.Handler {
 	router := mux.NewRouter()
-
+	router.Use(mux.CORSMethodMiddleware(router))
 	auth := router.PathPrefix("/auth").Subrouter()
 	{
 		auth.HandleFunc("/sign-up", h.authHandler.SignUp).Methods("POST")
